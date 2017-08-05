@@ -8,9 +8,14 @@
     "express": "^4.13.4",
     "node-gcm": "^0.14.0"
   },
-  "engines": {
-    "node": "4.1.1"
+    "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node server.js"
   },
+  "engines": {
+   "node": "6.11.1"
+     },
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.4.0",
