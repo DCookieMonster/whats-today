@@ -11,11 +11,6 @@
   "engines": {
     "node": "4.1.1"
   },
-  "scripts": {
-    "start": "npm run css && node server.js",
-    "css": "postcss -u autoprefixer -r styles/*",
-    "postinstall": "npm run start"
-  },
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.4.0",
