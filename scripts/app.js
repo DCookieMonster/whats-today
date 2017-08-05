@@ -334,6 +334,13 @@
     keys.forEach(function(key) {
       app.getForecast(key);
     });
+    if (keys.length == 0){
+       if (app.isLoading) {
+      app.spinner.setAttribute('hidden', true);
+      app.container.removeAttribute('hidden');
+      app.isLoading = false;
+    }
+    }
   };
 
   app.deleteCity = function(city) {
