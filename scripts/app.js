@@ -468,12 +468,37 @@
    *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
    ************************************************************************/
   // Check for Geolocation API permissions  
-  navigator.permissions.query({
-      name: 'geolocation'
-    })
-    .then(function(permissionStatus) {
-      if (permissionStatus.state == 'granted') {
-        navigator.geolocation.getCurrentPosition(function(location) {
+  // navigator.permissions.query({
+  //     name: 'geolocation'
+  //   })
+  //   .then(function(permissionStatus) {
+  //     if (permissionStatus.state == 'granted') {
+  //       navigator.geolocation.getCurrentPosition(function(location) {
+  //         console.log(location.coords.latitude);
+  //         console.log(location.coords.longitude);
+  //         app.getForecast('', '', {
+  //           'latitude': location.coords.latitude,
+  //           'longitude': location.coords.longitude
+  //         });
+  //       });
+  //     }
+  //     console.log('geolocation permission state is ', permissionStatus.state);
+
+  //     permissionStatus.onchange = function() {
+  //       console.log('geolocation permission state has changed to ', this.state);
+  //       if (permissionStatus.state == 'granted') {
+  //         navigator.geolocation.getCurrentPosition(function(location) {
+  //           console.log(location.coords.latitude);
+  //           console.log(location.coords.longitude);
+  //           app.getForecast('', '', {
+  //             'latitude': location.coords.latitude,
+  //             'longitude': location.coords.longitude
+  //           });
+  //         });
+  //       }
+  //     };
+  //   });
+navigator.geolocation.getCurrentPosition(function(location) {
           console.log(location.coords.latitude);
           console.log(location.coords.longitude);
           app.getForecast('', '', {
@@ -481,24 +506,6 @@
             'longitude': location.coords.longitude
           });
         });
-      }
-      console.log('geolocation permission state is ', permissionStatus.state);
-
-      permissionStatus.onchange = function() {
-        console.log('geolocation permission state has changed to ', this.state);
-        if (permissionStatus.state == 'granted') {
-          navigator.geolocation.getCurrentPosition(function(location) {
-            console.log(location.coords.latitude);
-            console.log(location.coords.longitude);
-            app.getForecast('', '', {
-              'latitude': location.coords.latitude,
-              'longitude': location.coords.longitude
-            });
-          });
-        }
-      };
-    });
-
   // TODO add startup code here
   app.selectedCities = localStorage.selectedCities;
   if (app.selectedCities) {
