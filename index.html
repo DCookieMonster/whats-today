@@ -34,6 +34,7 @@ limitations under the License.
       <meta name="theme-color" content="#4db6ac"/>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="styles/inline.css">
     <!-- Compiled and minified JavaScript -->
   </head>
@@ -46,20 +47,29 @@ limitations under the License.
     <main class="main">
       <div class="card cardTemplate weather-forecast" hidden>
         <div class="city-key" hidden></div>
+        <div class="city-id" hidden></div>
         <div class="card-last-updated" hidden></div>
-        <div class="location"></div>
-        <div class="date"></div>
+        <div class="row">
+            <div class="col s11 m11">
+                    <div class="location"></div>
+                     <div class="date"></div>
         <div class="description"></div>
+            </div>
+            <div class="col s1 m1"> 
+            <i class="material-icons right btn-hidden butDelete">close</i>
+            </div>
+        </div>
+       
         <div class="current">
           <div class="visual">
             <div class="icon"></div>
             <div class="temperature">
               <span class="value"></span><span class="scale">°C</span>
+                <div style='font-size: 0.25em;' class=" humidity"></div>
             </div>
           </div>
           <div class="description" style="padding-left: 5%;">
             <div class="yesterday"><span class="yesterday-diff"></span>°<span class="yesterday-info"></span></div>
-            <div class="humidity"></div>
            <!--  <div class="wind">
               <span class="value"></span>
               <span class="scale">mph</span>

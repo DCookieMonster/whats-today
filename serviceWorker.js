@@ -13,7 +13,7 @@
 // limitations under the License.
 
 var dataCacheName = 'weatherData-v1';
-var cacheName = 'weatherPWA-final-1';
+var cacheName = 'weatherPWA-1';
 var filesToCache = [
   '/',
   '/index.html',
@@ -103,7 +103,7 @@ self.addEventListener('fetch', function(e) {
 });
 
 self.addEventListener('fetch', function(e) {
-  console.log('[Service Worker] Fetch', e.request.url);
+  console.log('[Service Worker] Fetch - Dark', e.request.url);
   var dataUrl = 'https://api.darksky.net/forecast/82b05953baf3b7b7396dddd452886009/';
   if (e.request.url.indexOf(dataUrl) > -1) {
     /*

@@ -385,6 +385,7 @@ body {
     background-color: #4db6ac; }
 
 
-.btn{
-  background-color: #4db6ac;
+.description .yesterday{
+     font-size: 1.4em;
+    font-weight: bold;
 }

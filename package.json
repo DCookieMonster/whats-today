@@ -1,8 +1,8 @@
 {
-  "name": "demo-progressive-web-app",
-  "description": "Demo progressive web application",
+  "name": "whats-today",
+  "description": "The Weather Today and Yesterday",
   "version": "1.0.0",
-  "author": "gokulkrishh",
+  "author": "dor amir",
   "dependencies": {
     "body-parser": "^1.15.0",
     "express": "^4.13.4",

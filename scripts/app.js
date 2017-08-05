@@ -86,6 +86,7 @@
   // Updates a weather card with the latest weather forecast. If the card
   // doesn't already exist, it's cloned from the template.
   app.updateForecastCard = function(data) {
+
     var dataLastUpdated = new Date(data.created);
     var sunrise = data.channel.astronomy.sunrise;
     var sunset = data.channel.astronomy.sunset;
@@ -105,8 +106,18 @@
     }
     if (!card) {
       card = app.cardTemplate.cloneNode(true);
+      if (data.key == '') {
+        card.querySelector('.butDelete').textContent = 'gps_fixed';
+      } else {
+        card.querySelector('.butDelete').onclick = function() {
+          app.deleteCity(data.key);
+        };
+        card.querySelector('.butDelete').style.cursor = 'pointer';
+      }
       card.classList.remove('cardTemplate');
       card.querySelector('.location').textContent = city + ', ' + country;
+      card.querySelector('.city-key').textContent = city + ', ' + country;
+      card.querySelector('.city-id').textContent = city;
       data.key = city;
       data.label = city;
       card.removeAttribute('hidden');
@@ -298,7 +309,7 @@
     $.ajax({
       url: url,
       method: 'GET',
-       dataType: 'jsonp',
+      dataType: 'jsonp',
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': true,
@@ -324,6 +335,29 @@
       app.getForecast(key);
     });
   };
+
+  app.deleteCity = function(city) {
+    var index = -1;
+    for (var i = app.selectedCities.length - 1; i >= 0; i--) {
+      if (app.selectedCities[i].key == city) {
+        index = i;
+        break;
+      }
+    }
+    if (index > -1) {
+      app.selectedCities.splice(index, 1);
+    }
+    delete app.visibleCards[city];
+    var cards = document.getElementsByClassName('card');
+    for (var i = cards.length - 1; i >= 0; i--) {
+      var cityId = cards[i].querySelector('.city-id').textContent
+      if (cityId == city){
+        $(cards[i]).remove();
+      } 
+    }
+    app.saveSelectedCities();
+    app.updateForecasts();
+  }
 
   // TODO add saveSelectedCities function here
   // Save list of cities to localStorage.
@@ -500,14 +534,12 @@
   //       }
   //     };
   //   });
-navigator.geolocation.getCurrentPosition(function(location) {
-          console.log(location.coords.latitude);
-          console.log(location.coords.longitude);
-          app.getForecast('', '', {
-            'latitude': location.coords.latitude,
-            'longitude': location.coords.longitude
-          });
-        });
+  navigator.geolocation.getCurrentPosition(function(location) {
+    app.getForecast('', '', {
+      'latitude': location.coords.latitude,
+      'longitude': location.coords.longitude
+    });
+  });
   // TODO add startup code here
   app.selectedCities = localStorage.selectedCities;
   if (app.selectedCities) {
@@ -515,7 +547,7 @@ navigator.geolocation.getCurrentPosition(function(location) {
     app.selectedCities = JSON.parse(app.selectedCities);
     app.selectedCities.forEach(function(city) {
       app.getForecast(city.key, city.label);
-    });
+    }); 
   } else {
     /* The user is using the app for the first time, or the user has not
      * saved any cities, so show the user some fake data. A real app in this
@@ -532,7 +564,7 @@ navigator.geolocation.getCurrentPosition(function(location) {
   // TODO add service worker code here
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-      .register('./service-worker.js')
+      .register('./serviceWorker.js')
       .then(function() {
         console.log('Service Worker Registered');
       });
