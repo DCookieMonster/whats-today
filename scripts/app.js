@@ -110,14 +110,14 @@
         card.querySelector('.butDelete').textContent = 'gps_fixed';
       } else {
         card.querySelector('.butDelete').onclick = function() {
-          app.deleteCity(data.key);
+          app.deleteCity(this.parentElement.parentElement.parentElement.querySelector('.city-id').textContent);
         };
         card.querySelector('.butDelete').style.cursor = 'pointer';
       }
       card.classList.remove('cardTemplate');
       card.querySelector('.location').textContent = city + ', ' + country;
       card.querySelector('.city-key').textContent = city + ', ' + country;
-      card.querySelector('.city-id').textContent = city;
+      card.querySelector('.city-id').textContent = data.key;
       data.key = city;
       data.label = city;
       card.removeAttribute('hidden');
