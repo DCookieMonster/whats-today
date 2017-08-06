@@ -30,7 +30,7 @@ app.post('/send_notification', function (req, res) {
   }
 
    // Prepare a message to be sent
-    var message = new gcm.Message();
+  var message = new gcm.Message();
 
 
   var temp = req.body.endpoint.split('/');

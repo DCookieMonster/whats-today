@@ -146,12 +146,12 @@ self.addEventListener('push', function(event) {
 
     console.info('Event: Push');
 
-    var title = 'What\'s Today Is Awesome';
+    var title = 'What\'s Today';
 
     var body = {
-        'body': 'Click to see the latest weather',
+        'body': 'See you weather today',
         'tag': 'pwa',
-        'icon': './images/icons/icon-128x128.png'
+        'icon': './images/icons/icon-32x32.png'
     };
 
     event.waitUntil(
@@ -163,6 +163,8 @@ self.addEventListener('push', function(event) {
  NOTIFICATION EVENT: triggered when user click the notification.
  */
 self.addEventListener('notificationclick', function(event) {
+
+    var url = './latest.html';
 
     event.notification.close(); //Close the notification
 

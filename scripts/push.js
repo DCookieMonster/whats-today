@@ -126,7 +126,7 @@
         //Get `push subscription`
         registration.pushManager.getSubscription().then(function (subscription) {
           //Send `push notification` - source for below url `server.js`
-          fetch('https://whats-today.herokuapp.com/send_notification', {
+          fetch('http://localhost:3000/send_notification', {
             method: 'post',
             headers: {
               'Accept': 'application/json',
