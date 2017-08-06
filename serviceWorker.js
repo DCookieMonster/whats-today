@@ -18,6 +18,7 @@ var filesToCache = [
   '/',
   '/index.html',
   '/scripts/app.js',
+  '/scripts/push.js',
   '/styles/inline.css',
   '/images/clear.png',
   '/images/cloudy-scattered-showers.png',
@@ -136,3 +137,38 @@ self.addEventListener('fetch', function(e) {
 });
 
 
+/*
+ PUSH EVENT: triggered everytime, when a push notification is received.
+ */
+
+//Adding `push` event listener
+self.addEventListener('push', function(event) {
+
+    console.info('Event: Push');
+
+    var title = 'What\'s Today Is Awesome';
+
+    var body = {
+        'body': 'Click to see the latest weather',
+        'tag': 'pwa',
+        'icon': './images/icons/icon-128x128.png'
+    };
+
+    event.waitUntil(
+        self.registration.showNotification(title, body)
+    );
+});
+
+/*
+ NOTIFICATION EVENT: triggered when user click the notification.
+ */
+self.addEventListener('notificationclick', function(event) {
+
+    event.notification.close(); //Close the notification
+
+    // Open the app and navigate to latest.html after clicking the notification
+    event.waitUntil(
+        clients.openWindow('/')
+    );
+
+});

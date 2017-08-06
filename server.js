@@ -29,11 +29,14 @@ app.post('/send_notification', function (req, res) {
     res.status(400);
   }
 
-  var message = new gcm.Message();
+   // Prepare a message to be sent
+    var message = new gcm.Message();
+
+
   var temp = req.body.endpoint.split('/');
   var regTokens = [temp[temp.length - 1]];
 
-  var sender = new gcm.Sender('AIzaSyCjrU5SqotSg2ybDLK_7rMMt9Rv0dMusvY'); //Replace with your GCM API key
+  var sender = new gcm.Sender('AAAARLoMuOE:APA91bGDcR4xkpwDFI7_qdb7KgUHu3R3Q27R0g5gnQRLS4htBQS_rtl9MKB1KPbowTJ6-u6m7RM0ASlCeSNmVNk4679Ibh8OEAB54lzHmFVY7b4pCjVwpjbuTu9wwhNI5l0GAdDnFcss'); //Replace with your GCM API key
 
   // Now the sender can be used to send messages
   sender.send(message, { registrationTokens: regTokens }, function (error, response) {
@@ -42,7 +45,8 @@ app.post('/send_notification', function (req, res) {
       res.status(400);
     }
   	else {
-     	console.log(response);
+      console.log('sent');
+      console.log(response);
       res.status(200);
     }
   });

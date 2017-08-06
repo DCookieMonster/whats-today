@@ -33,7 +33,7 @@
   "author": {
     "name": "Dor Amir"
   },
-   "start_url": "index.html",
-   "orientation": "portrait"
-
+  "start_url": "index.html",
+  "orientation": "portrait",
+  "gcm_sender_id": "295179172065"
 }
