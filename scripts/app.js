@@ -57,7 +57,7 @@
           else {
               this.className += ' Filled';
               var src = this.src;
-              var pref = src.split('.')[0];
+              var pref = src.split('.png')[0];
               this.src = pref + ' Filled.png'
           }
 
