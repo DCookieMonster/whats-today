@@ -44,6 +44,27 @@
     app.toggleAddDialog(true);
   });
 
+  var clothClass = document.getElementsByClassName('cloth');
+  for (var i = 0; i < clothClass.length; i++){
+    clothClass[i].addEventListener('click', function ()
+      {
+          if (this.classList.contains('Filled')) {
+              this.className = 'cloth';
+              var src = this.src;
+              var pref = src.split('%20Filled')[0];
+              this.src = pref + '.png'
+          }
+          else {
+              this.className += ' Filled';
+              var src = this.src;
+              var pref = src.split('.')[0];
+              this.src = pref + ' Filled.png'
+          }
+
+      }
+  )
+  }
+
   document.getElementById('butAddCity').addEventListener('click', function() {
     // Add the newly selected city
     var selected = document.getElementById('selectCityToAdd');

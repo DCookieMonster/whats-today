@@ -487,3 +487,7 @@ body {
   -webkit-transform: translateY(0);
   transform: translateY(0);
 }
+
+.cloth{
+  cursor: pointer;
+}
