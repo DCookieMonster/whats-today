@@ -33,7 +33,7 @@ var filesToCache = [
   '/images/snow.png',
   '/images/thunderstorm.png',
   '/images/wind.png',
-  'images/clothing/Coat.png'
+  '/images/clothing/Coat.png'
 ];
 
 self.addEventListener('install', function(e) {
@@ -147,7 +147,7 @@ self.addEventListener('push', function(event) {
 
     console.info('Event: Push');
 
-    var title = 'What\'s Today';
+    var title = 'Whats Today';
 
     var body = {
         'body': 'See you weather today',
