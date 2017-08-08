@@ -4,18 +4,20 @@
   "version": "1.0.0",
   "author": "dor amir",
   "dependencies": {
-    "body-parser": "^1.15.0",
+    "body-parser": "*",
     "express": "^4.13.4",
-    "node-gcm": "^0.14.0"
+    "firebase-admin": "^5.1.0",
+    "node-gcm": "^0.14.0",
+    "request": "2.65.0"
   },
-    "main": "server.js",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "node server.js"
   },
   "engines": {
-   "node": "6.11.1"
-     },
+    "node": "6.11.1"
+  },
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^6.4.0",

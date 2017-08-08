@@ -33,7 +33,7 @@ var filesToCache = [
   '/images/snow.png',
   '/images/thunderstorm.png',
   '/images/wind.png',
-  '/images/clothing/Coat.png'
+  '/images/clothing/coat.png'
 ];
 
 self.addEventListener('install', function(e) {

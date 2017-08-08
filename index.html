@@ -37,6 +37,9 @@ limitations under the License.
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="styles/inline.css">
     <!-- Compiled and minified JavaScript -->
+    <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/firebaseui/2.3.0/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.3.0/firebaseui.css" />
   </head>
   <body>
     <header class="header">
@@ -161,47 +164,49 @@ limitations under the License.
         </div>
           <div class="row">
             <div class="col s2 m2">
-              <img class="cloth" width="100%" src="images/clothing/Coat.png">
+              <img class="center cloth " width="100%" src="images/clothing/coat.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth" width="100%"  src="images/clothing/icons8-Scarf.png">
+              <img class="center cloth" width="100%"  src="images/clothing/scarf.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth" width="100%"  src="images/clothing/icons8-Shirt.png">
+              <img class="center cloth" width="100%"  src="images/clothing/shirt.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth" width="100%"  src="images/clothing/icons8-Shorts.png">
+              <img class="center cloth" width="100%"  src="images/clothing/shorts.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth" width="100%" src="images/clothing/icons8-T-Shirt.png">
+              <img class="center cloth" width="100%" src="images/clothing/t_shirt.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth"width="100%"  src="images/clothing/icons8-Mittens.png">
+              <img class="center cloth"width="100%"  src="images/clothing/mittens.png">
             </div>
           </div>
           <div class="row">
 
             <div class="col s2 m2">
-              <img class="cloth" width="100%" src="images/clothing/icons8-Trainers.png">
+              <img class="center cloth" width="100%" src="images/clothing/shoes.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth" width="100%" src="images/clothing/icons8-Skirt.png">
+              <img class="center cloth" width="100%" src="images/clothing/skirt.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth" width="100%" src="images/clothing/icons8-Winter%20Boots.png">
+              <img class="center cloth" width="100%" src="images/clothing/boots.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth" width="100%" src="images/clothing/icons8-Flip%20Flops.png">
+              <img class="center cloth" width="100%" src="images/clothing/flip_flop.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth" width="100%"  src="images/clothing/icons8-Trousers.png">
+              <img class="center cloth" width="100%"  src="images/clothing/trousers.png">
             </div>
             <div class="col s2 m2">
-              <img class="cloth" width="100%" src="images/clothing/icons8-Umbrella.png">
+              <img class="center cloth" width="100%" src="images/clothing/umbrella.png">
             </div>
           </div>
       </div>
     </main>
+
+
     <div class="dialog-container">
       <div class="dialog">
         <!-- <div class="dialog-title">Add new city</div> -->
@@ -225,11 +230,18 @@ limitations under the License.
       </svg>
     </div>
 
-      <div class="fab fab__push">
-        <div class="fab__ripple"></div>
-          <i class="material-icons fab__image">notifications_off</i>
-        <!-- <img class="fab__image" src="./images/push-off.png" alt="Push Notification" /> -->
-      </div>
+      <!--<div class="fab fab__push">-->
+        <!--<div class="fab__ripple"></div>-->
+          <!--<i class="material-icons fab__image">notifications_off</i>-->
+        <!--&lt;!&ndash; <img class="fab__image" src="./images/push-off.png" alt="Push Notification" /> &ndash;&gt;-->
+      <!--</div>-->
+    <!--<div class="fab google_signing">-->
+    <!--<div class=""></div>-->
+    <!--<i class="material-icons">person</i>-->
+    <!--</div>-->
+
+          <!--<div class="dialog-container-2 dialog" id="firebaseui-auth-container"></div>-->
+
 
       <!-- Toast msg -->
       <div class="toast__msg"></div>
@@ -244,6 +256,9 @@ limitations under the License.
     <script src="scripts/toast.js" async></script>
 
     <script src="scripts/app.js" async></script>
-    <script src="scripts/push.js" async></script>
+    <script src="scripts/clothing.js" async></script>
+
+    <!--<script src="scripts/push.js" async></script>-->
+    <!--<script src="scripts/firebase.js" async></script>-->
   </body>
 </html>

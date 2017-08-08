@@ -15,18 +15,21 @@
 
 (function() {
   'use strict';
-
-  var app = {
+  window.app = {
     isLoading: true,
     visibleCards: {},
-    selectedCities: [],
+    selectedCities: {},
     spinner: document.querySelector('.loader'),
     cardTemplate: document.querySelector('.cardTemplate'),
     container: document.querySelector('.main'),
     addDialog: document.querySelector('.dialog-container'),
+    baseServerUrl: 'http://localhost:3000',
+    city: '',
+    temp: '',
     daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   };
 
+  var app = window.app;
 
   /*****************************************************************************
    *
@@ -44,44 +47,26 @@
     app.toggleAddDialog(true);
   });
 
-  var clothClass = document.getElementsByClassName('cloth');
-  for (var i = 0; i < clothClass.length; i++){
-    clothClass[i].addEventListener('click', function ()
-      {
-          if (this.classList.contains('Filled')) {
-              this.className = 'cloth';
-              var src = this.src;
-              var pref = src.split('%20Filled')[0];
-              this.src = pref + '.png'
-          }
-          else {
-              this.className += ' Filled';
-              var src = this.src;
-              var pref = src.split('.png')[0];
-              this.src = pref + ' Filled.png'
-          }
-
-      }
-  )
-  }
-
   document.getElementById('butAddCity').addEventListener('click', function() {
     // Add the newly selected city
     var selected = document.getElementById('selectCityToAdd');
     // var selected = select.options[select.selectedIndex];
     var key = selected.value;
     var label = selected.value;
-    if (!app.selectedCities) {
-      app.selectedCities = [];
-    }
+    remove();
     app.getForecast(key, label);
-    app.selectedCities.push({
+    app.selectedCities = {
       key: key,
       label: label
-    });
+    };
     app.saveSelectedCities();
     app.toggleAddDialog(false);
   });
+
+    function remove() {
+        $(app.visibleCards[app.city.toLowerCase()]).remove();
+        app.visibleCards = [];
+    }
 
   document.getElementById('butAddCancel').addEventListener('click', function() {
     // Close the add new city dialog
@@ -115,8 +100,8 @@
     var humidity = data.channel.atmosphere.humidity;
     var wind = data.channel.wind;
 
-    var card = app.visibleCards[data.key];
-    var loc = data.channel.location
+    var card = app.visibleCards[data.key.toLowerCase()];
+    var loc = data.channel.location;
     var city = '';
     var country = '';
     if (loc) {
@@ -138,12 +123,13 @@
       card.classList.remove('cardTemplate');
       card.querySelector('.location').textContent = city + ', ' + country;
       card.querySelector('.city-key').textContent = city + ', ' + country;
+      app.city = city;
       card.querySelector('.city-id').textContent = data.key;
       data.key = city;
       data.label = city;
       card.removeAttribute('hidden');
       app.container.appendChild(card);
-      app.visibleCards[data.key] = card;
+      app.visibleCards[city.toLowerCase()] = card;
     }
 
     // Verifies the data provide is newer than what's already visible
@@ -165,6 +151,7 @@
     card.querySelector('.current .icon').classList.add(app.getIconClass(current.code));
     card.querySelector('.current .temperature .value').textContent =
       Math.round(current.temp);
+    app.temp = Math.round(current.temp);
     card.querySelector('.current .humidity').textContent =
       Math.round(humidity) + '%';
     var nextDays = card.querySelectorAll('.future .oneday');
@@ -193,7 +180,7 @@
 
   app.updateYesterdayForecastCard = function(data) {
     var dataLastUpdated = new Date(data.created);
-    var card = app.visibleCards[data.key];
+    var card = app.visibleCards[data.key.toLowerCase()];
     var daily = data.daily;
     var dailyData = daily.data;
     // Verifies the data provide is newer than what's already visible
@@ -352,6 +339,9 @@
       app.isLoading = true;
     }
     var keys = Object.keys(app.visibleCards);
+    if (keys.length == 0){
+      app.getGPSForcasts()
+    }
     keys.forEach(function(key) {
       app.getForecast(key);
     });
@@ -364,24 +354,28 @@
     }
   };
 
+  app.getGPSForcasts = function () {
+      navigator.geolocation.getCurrentPosition(function(location) {
+          app.getForecast('', '', {
+              'latitude': location.coords.latitude,
+              'longitude': location.coords.longitude
+          });
+      });
+  }
+
   app.deleteCity = function(city) {
-    var index = -1;
-    for (var i = app.selectedCities.length - 1; i >= 0; i--) {
-      if (app.selectedCities[i].key == city) {
-        index = i;
-        break;
-      }
-    }
-    if (index > -1) {
-      app.selectedCities.splice(index, 1);
-    }
-    delete app.visibleCards[city];
+    app.selectedCities = null;
+    delete app.visibleCards[city.toLowerCase()];
     var cards = document.getElementsByClassName('card');
     for (var i = cards.length - 1; i >= 0; i--) {
-      var cityId = cards[i].querySelector('.city-id').textContent
-      if (cityId == city){
-        $(cards[i]).remove();
-      } 
+      var cityCard = cards[i].querySelector('.city-id');
+        if (cityCard){
+        var cityId = cityCard.textContent;
+            if (cityId == city){
+                $(cards[i]).remove();
+            }
+        }
+
     }
     app.saveSelectedCities();
     app.updateForecasts();
@@ -562,21 +556,24 @@
   //       }
   //     };
   //   });
-  navigator.geolocation.getCurrentPosition(function(location) {
-    app.getForecast('', '', {
-      'latitude': location.coords.latitude,
-      'longitude': location.coords.longitude
-    });
-  });
+
   // TODO add startup code here
   app.selectedCities = localStorage.selectedCities;
-  if (app.selectedCities) {
+  if (app.selectedCities == null && app.selectedCities != {}) {
 
     app.selectedCities = JSON.parse(app.selectedCities);
-    app.selectedCities.forEach(function(city) {
-      app.getForecast(city.key, city.label);
-    }); 
+    app.getForecast(app.selectedCities.key, app.selectedCities.label);
+
+    // app.selectedCities.forEach(function(city) {
+    //   app.getForecast(city.key, city.label);
+    // });
   } else {
+      navigator.geolocation.getCurrentPosition(function(location) {
+          app.getForecast('', '', {
+              'latitude': location.coords.latitude,
+              'longitude': location.coords.longitude
+          });
+      });
     /* The user is using the app for the first time, or the user has not
      * saved any cities, so show the user some fake data. A real app in this
      * scenario could guess the user's location via IP lookup and then inject
@@ -606,3 +603,5 @@
   }
 
 })();
+
+

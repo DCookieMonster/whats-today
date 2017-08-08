@@ -119,6 +119,8 @@
     }
   });
 
+  // var url_pref = 'https://whats-today.herokuapp.com';
+  var url_pref = 'http://localhost:3000';
   //Form data with info to send to server
   function sendPushNotification() {
     navigator.serviceWorker.ready
@@ -126,7 +128,7 @@
         //Get `push subscription`
         registration.pushManager.getSubscription().then(function (subscription) {
           //Send `push notification` - source for below url `server.js`
-          fetch('https://whats-today.herokuapp.com/send_notification', {
+          fetch(url_pref + '/send_notification', {
             method: 'post',
             headers: {
               'Accept': 'application/json',
