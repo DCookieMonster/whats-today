@@ -99,9 +99,9 @@ var toggleAddDialog2 = function (visible) {
 //     });
 // };
 //
-window.addEventListener('load', function() {
-   app.silentSignIn();
-});
+// window.addEventListener('load', function() {
+//    app.silentSignIn();
+// });
 
 firebase.auth().getRedirectResult().then(function (result) {
     if (result.credential) {

@@ -15,21 +15,8 @@
 
 (function () {
     'use strict';
-    window.app = {
-        isLoading: true,
-        visibleCards: {},
-        selectedCities: {},
-        spinner: document.querySelector('.loader'),
-        cardTemplate: document.querySelector('.cardTemplate'),
-        container: document.querySelector('.main'),
-        addDialog: document.querySelector('.dialog-container'),
-        baseServerUrl: 'https://whats-today.herokuapp.com', //'http://localhost:3000', //
-        city: '',
-        temp: '',
-        daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-    };
 
-    var app = window.app;
+    var app = window.app || {};
 
     /*****************************************************************************
      *

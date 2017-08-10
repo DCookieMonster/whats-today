@@ -204,6 +204,21 @@
       <!-- Toast msg -->
       <div class="toast__msg"></div>
     </div>
+    <script>
+        window.app = {
+            isLoading: true,
+            visibleCards: {},
+            selectedCities: {},
+            spinner: document.querySelector('.loader'),
+            cardTemplate: document.querySelector('.cardTemplate'),
+            container: document.querySelector('.main'),
+            addDialog: document.querySelector('.dialog-container'),
+            baseServerUrl: 'https://whats-today.herokuapp.com', //'http://localhost:3000', //
+            city: '',
+            temp: '',
+            daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        };
+    </script>
      <script
     src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
