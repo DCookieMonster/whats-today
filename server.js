@@ -5,6 +5,15 @@ var http = require('http');
 var request = require("request");
 /* GET users listing. */
 var bodyParser = require('body-parser');
+Date.prototype.yyyymmdd = function() {
+    var mm = this.getMonth() + 1; // getMonth() is zero-based
+    var dd = this.getDate();
+
+    return [this.getFullYear(),
+        (mm>9 ? '' : '0') + mm,
+        (dd>9 ? '' : '0') + dd
+    ].join('');
+};
 
 var gcm = require('node-gcm');
 var admin = require("firebase-admin");
@@ -26,15 +35,12 @@ admin.initializeApp({
 
 // As an admin, the app has access to read and write all data, regardless of Security Rules
 var db = admin.database();
-var ref = db.ref("accounts");
-ref.once("value", function(snapshot) {
-    // console.log(snapshot.val());
-});
-
 var cloth_ref = db.ref("clothing");
-cloth_ref.once("value", function(snapshot) {
-    // console.log(snapshot.val());
-});
+var ref = db.ref("accounts");
+// ref.once("value", function(snapshot) {
+//     // console.log(snapshot.val());
+// });
+
 
 //To server static assests in root dir
 app.use(express.static(__dirname));
@@ -156,16 +162,6 @@ app.post('/sign_in', function (req, res) {
 
 
 });
-
-Date.prototype.yyyymmdd = function() {
-    var mm = this.getMonth() + 1; // getMonth() is zero-based
-    var dd = this.getDate();
-
-    return [this.getFullYear(),
-        (mm>9 ? '' : '0') + mm,
-        (dd>9 ? '' : '0') + dd
-    ].join('');
-};
 
 //To receive push request from client
 app.post('/send_notification', function (req, res) {
