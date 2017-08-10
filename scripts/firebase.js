@@ -99,29 +99,7 @@ var toggleAddDialog2 = function (visible) {
 // };
 //
 window.addEventListener('load', function() {
-    // initApp();
-    if (app.city != '' && localStorage.uid && localStorage.uid != null){
-        var user = JSON.parse(localStorage.user);
-        var data = {
-            uid: localStorage.uid,
-            created_at: new Date().getTime(),
-            city: app.city
-        };
-        $.ajax({
-            url: app.baseServerUrl + '/sign_in/id',
-            method: 'POST',
-            data: JSON.stringify(data),
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            success: function (response) {
-                localStorage.uid = response.uid;
-                localStorage.user = JSON.stringify(data);
-                loginSuccess(user);
-            }
-        });
-    }
+   app.silentSignIn();
 });
 
 firebase.auth().getRedirectResult().then(function (result) {
@@ -152,7 +130,7 @@ firebase.auth().getRedirectResult().then(function (result) {
         success: function (response) {
             localStorage.uid = response.uid;
             localStorage.user = JSON.stringify(data);
-            loginSuccess(user);
+            app.loginSuccess(user);
         }
     });
 
@@ -167,10 +145,38 @@ firebase.auth().getRedirectResult().then(function (result) {
     // ...
 });
 
-function loginSuccess(user) {
+app.loginSuccess = function(user) {
     var googleButton = document.querySelector('.google_signing');
     $(googleButton).empty();
     googleButton.innerHTML = "<img src='" + user.photoURL + "' width='100%'>";
     var card_title = document.querySelector('.wearing-header');
     card_title.textContent = user.displayName + ', ' + card_title.textContent;
-}
+};
+
+app.silentSignIn = function () {
+    if (app.city != '' && localStorage.uid && localStorage.uid != null){
+        var user = JSON.parse(localStorage.user);
+        var data = {
+            uid: localStorage.uid,
+            created_at: new Date().getTime(),
+            city: app.city
+        };
+        $.ajax({
+            url: app.baseServerUrl + '/sign_in/id',
+            method: 'POST',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (response) {
+                localStorage.uid = response.uid;
+                if (response.clothing){
+                    app.setWarmLevel(response.clothing.warm_level);
+                    localStorage.clothing = response.clothing;
+                }
+                app.loginSuccess(user);
+            }
+        });
+    }
+};

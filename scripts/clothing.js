@@ -1,76 +1,42 @@
+var app = window.app;
 
-// (function() {
-//     'use strict';
-    var app = window.app;
-
-    var clothClass = document.getElementsByClassName('cloth');
-    for (var i = 0; i < clothClass.length; i++) {
-        clothClass[i].addEventListener('click', function () {
-                if (localStorage.uid == null) {
-                    document.querySelector('.dialog-container-2').classList.add('dialog-container-2--visible');
-                }
-                if (this.classList.contains('Filled')) {
-                    this.className = 'center cloth';
-                    var src = this.src;
-                    var pref = src.split('-f')[0];
-                    this.src = pref + '.png'
-                    var clothing = pref.split('/');
-                    var data = {
-                        chosen_cloth: clothing[clothing.length - 1],
-                        city: app.city,
-                        temp: app.temp,
-                        uid: localStorage.uid,
-                        time: new Date().getTime()
-                    };
-                    sendDataToClothingServer(data, false)
-
-                }
-                else {
-                    this.className += ' Filled';
-                    var src = this.src;
-                    var pref = src.split('.png')[0];
-                    this.src = pref + '-f.png';
-                    var clothing = pref.split('/');
-                    var data = {
-                        chosen_cloth: clothing[clothing.length - 1],
-                        city: app.city,
-                        temp: app.temp,
-                        uid: localStorage.uid,
-                        time: new Date().getTime()
-                    };
-                    sendDataToClothingServer(data, true)
-
-                }
-
+var clothClass = document.getElementsByClassName('cloth');
+for (var i = 0; i < clothClass.length; i++) {
+    clothClass[i].addEventListener('click', function () {
+            // if (localStorage.uid == null) {
+            //     document.querySelector('.dialog-container-2').classList.add('dialog-container-2--visible');
+            // }
+            if (!app.city && app.city == '' && !app.temp) {
+                return;
             }
-        )
-    }
+            var clothClass = document.getElementsByClassName('cloth');
+            for (var i = 0; i < clothClass.length; i++) {
+                if (clothClass[i].classList.contains('Filled')) {
+                    var pref = clothClass[i].src.split('-f.png')[0];
+                    clothClass[i].src = pref + '.png';
+                    clothClass[i].classList.remove('Filled');
+                }
+            }
+            this.className += ' Filled';
+            var src = this.src;
+            var pref = src.split('.png')[0];
+            this.src = pref + '-f.png';
+            var clothing = pref.split('/');
+            var data = {
+                warm_level: clothing[clothing.length - 1],
+                city: app.city,
+                temp: app.temp,
+                uid: localStorage.uid,
+                time: new Date().getTime()
+            };
+            sendDataToClothingServer(data);
 
+        }
+    )
+}
 
-    // app.clothing = {
-    //     coat: false,
-    //     umbrella: false,
-    //     shorts: false,
-    //     t_shirt: false,
-    //     shirt: false,
-    //     boots: false,
-    //     skirt: false,
-    //     trousers: false,
-    //     scarf: false,
-    //     flip_flop: false,
-    //     mittens: false,
-    //     shoes: false
-    // };
-// });
-
-function sendDataToClothingServer(data, chose_clothing) {
-    if (chose_clothing){
-        var sefix = 'chose_clothing';
-    }
-    else{
-        var sefix = 'unchose_clothing'
-    }
-    fetch(app.baseServerUrl + '/' + sefix, {
+function sendDataToClothingServer(data) {
+    fetch(app.baseServerUrl + '/warm_level', {
         method: 'post',
         headers: {
             'Accept': 'application/json',
@@ -79,4 +45,20 @@ function sendDataToClothingServer(data, chose_clothing) {
         body: JSON.stringify(data)
     })
 
+}
+
+app.setWarmLevel = function (warmLevel) {
+    var clothClass = document.getElementsByClassName('cloth');
+    for (var i = 0; i < clothClass.length; i++) {
+        var src = clothClass[i].src;
+        var pref = src.split('.png')[0].split('/');
+        var warmLevelID = pref[pref.length - 1];
+        if (warmLevel == warmLevelID) {
+            clothClass[i].className += ' Filled';
+            var src = clothClass[i].src;
+            var pref = src.split('.png')[0];
+            clothClass[i].src = pref + '-f.png';
+        }
+
+    }
 }

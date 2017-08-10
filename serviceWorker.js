@@ -12,28 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var dataCacheName = 'weatherData-v2';
-var cacheName = 'weatherPWA-2';
-var filesToCache = [
-  '/',
-  '/index.html',
-  '/scripts/app.js',
-  '/scripts/push.js',
-  '/styles/inline.css',
-  '/images/clear.png',
-  '/images/cloudy-scattered-showers.png',
-  '/images/cloudy.png',
-  '/images/fog.png',
-  '/images/ic_add_white_24px.svg',
-  '/images/ic_refresh_white_24px.svg',
-  '/images/partly-cloudy.png',
-  '/images/rain.png',
-  '/images/scattered-showers.png',
-  '/images/sleet.png',
-  '/images/snow.png',
-  '/images/thunderstorm.png',
-  '/images/wind.png'
-];
+var dataCacheName = 'weatherData-v2-test';
+var cacheName = 'weatherPWA-2-test';
+var filesToCache = [];
+//   '/',
+//   '/index.html',
+//   '/scripts/app.js',
+//   '/scripts/push.js',
+//   '/styles/inline.css',
+//   '/images/clear.png',
+//   '/images/cloudy-scattered-showers.png',
+//   '/images/cloudy.png',
+//   '/images/fog.png',
+//   '/images/ic_add_white_24px.svg',
+//   '/images/ic_refresh_white_24px.svg',
+//   '/images/partly-cloudy.png',
+//   '/images/rain.png',
+//   '/images/scattered-showers.png',
+//   '/images/sleet.png',
+//   '/images/snow.png',
+//   '/images/thunderstorm.png',
+//   '/images/wind.png'
+// ];
 
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');

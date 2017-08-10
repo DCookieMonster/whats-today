@@ -255,6 +255,14 @@ body {
 .weather-forecast .date, .weather-forecast .description {
   font-size: 1.25em; }
 
+.temperature .description {
+  font-size: 1.25em; }
+
+
+.temperature .description {
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1; }
 .weather-forecast .current {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -277,7 +285,7 @@ body {
   .weather-forecast .current .sunset:before {
     content: "Sunset: ";
     color: #888; }
-  .weather-forecast .current .yesterday:before {
+  .weather-forecast .yesterday:before {
     content: "Today Is: ";
     color: #888; }
   .weather-forecast .current .wind:before {
@@ -343,6 +351,8 @@ body {
 
 @media (max-width: 450px) {
   .weather-forecast .date, .weather-forecast .description {
+    font-size: 0.9em; }
+  .temperature .description {
     font-size: 0.9em; }
   .weather-forecast .current .icon {
     width: 96px;

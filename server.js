@@ -163,6 +163,34 @@ app.post('/sign_in', function (req, res) {
 });
 
 
+app.post('/warm_level', function (req, res) {
+    if (!req.body) {
+        res.status(400);
+    }
+    var date = new Date(req.body.time);
+    var key = req.body.uid + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+
+    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
+        var clothingInfo = snapshot.val();
+        if (clothingInfo) {
+            var data = { warm_level: req.body.warm_level };
+            cloth_ref.child(key).update(data)
+        }
+        else{
+            var data = {
+                ID: key,
+                warm_level: req.body.warm_level,
+                user_id: req.body.uid,
+                temp: req.body.temp,
+                city: req.body.city,
+                created_at: date
+            };
+            cloth_ref.child(key).set(data)
+        }
+
+    })
+});
+
 app.post('/sign_in/id', function (req, res) {
     if (!req.body) {
         res.status(400);
@@ -172,19 +200,24 @@ app.post('/sign_in/id', function (req, res) {
     var usersRef = ref.child("users");
     usersRef.child(id)
         .once('value', function(snapshot) {
-            var user = snapshot.val();
+            var user_id = snapshot.key;
             var date = new Date();
-            var cKey = user + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+            var cKey = id + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
             cloth_ref.child(cKey)
                 .once('value', function (snapshot) {
                     var clothing = snapshot.val();
-                    data = {uid: user};
+                    data = {uid: user_id};
                     if (clothing){
                         data['clothing'] = clothing;
                     }
                     res.json(data);
                     res.status(200)
                 })
+                .catch(function () {
+                    data = {uid: user_id};
+                    res.json(data);
+                    res.status(200)
+                });
         })
         .catch(function () {
             res.status(401);

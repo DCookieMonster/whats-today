@@ -41,11 +41,13 @@
             <div class="col s11 m11">
                     <div class="location"></div>
                      <div class="date"></div>
-        <div class="description"></div>
             </div>
             <div class="col s1 m1"> 
             <i class="material-icons right btn-hidden butDelete">close</i>
             </div>
+        </div>
+        <div class="description" style="padding-bottom: 2%">
+          <div class="yesterday"><span class="yesterday-diff"></span>°<span class="yesterday-info"></span></div>
         </div>
        
         <div class="current">
@@ -53,11 +55,15 @@
             <div class="icon"></div>
             <div class="temperature">
               <span class="value"></span><span class="scale">°C</span>
-                <div style='font-size: 0.25em;' class=" humidity"></div>
+                <!--<div style='font-size: 0.25em;' class=" humidity"></div>-->
+              <!--<div class="description" style="    font-size: 0.25em;"></div>-->
+
             </div>
-          </div>
-          <div class="description" style="padding-left: 5%;">
-            <div class="yesterday"><span class="yesterday-diff"></span>°<span class="yesterday-info"></span></div>
+            <div class="temperature" style="padding-top: 8%;padding-left: 5%">
+              <div style='font-size: 0.25em;' class=" humidity"></div>
+              <div class="description" style="    font-size: 0.25em;"></div>
+
+            </div>
           </div>
         </div>
         <div class="future">
@@ -137,51 +143,21 @@
       <div class="card">
         <div class="row" style="padding-bottom: 2%">
           <div class="col s12 m12">
-            <h5 class="wearing-header">What Are You Wearing Today?</h5>
+            <h5 style="font-size: 1.24em" class="wearing-header">How warm is what you wore today?</h5>
           </div>
         </div>
           <div class="row">
-            <div class="col s2 m2">
-              <img class="center cloth" width="100%" src="images/clothing/t_shirt.png">
+            <div class="col s3 m2">
+              <img class="center cloth" width="100%" src="images/clothing/jersey.png">
             </div>
-            <div class="col s2 m2">
-              <img class="center cloth" width="100%"  src="images/clothing/shorts.png">
+            <div class="col s3 m2">
+              <img class="center cloth" width="100%"  src="images/clothing/t_shirt.png">
             </div>
-            <div class="col s2 m2">
-              <img class="center cloth" width="100%"  src="images/clothing/skirt.png">
+            <div class="col s3 m2">
+              <img class="center cloth" width="100%"  src="images/clothing/shirt.png">
             </div>
-            <div class="col s2 m2">
-              <img class="center cloth" width="100%"  src="images/clothing/shoes.png">
-            </div>
-            <div class="col s2 m2">
-              <img class="center cloth" width="100%" src="images/clothing/flip_flop.png">
-
-            </div>
-            <div class="col s2 m2">
-              <img class="center cloth"width="100%"  src="images/clothing/mittens.png">
-            </div>
-          </div>
-          <div class="row">
-
-            <div class="col s2 m2">
-              <img class="center cloth" width="100%" src="images/clothing/shirt.png">
-            </div>
-            <div class="col s2 m2">
-              <img class="center cloth " width="100%" src="images/clothing/trousers.png">
-            </div>
-            <div class="col s2 m2">
+            <div class="col s3 m2">
               <img class="center cloth" width="100%"  src="images/clothing/coat.png">
-
-            </div>
-            <div class="col s2 m2">
-              <img class="center cloth" width="100%" src="images/clothing/scarf.png">
-
-            </div>
-            <div class="col s2 m2">
-              <img class="center cloth" width="100%" src="images/clothing/boots.png">
-            </div>
-            <div class="col s2 m2">
-              <img class="center cloth" width="100%" src="images/clothing/umbrella.png">
             </div>
           </div>
       </div>
@@ -210,20 +186,13 @@
         <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
       </svg>
     </div>
-    <!---->
-    <!--<div class="fab google_signing">-->
-    <!--<i class="material-icons">person</i>-->
-    <!--</div>-->
-
 
       <div class="fixed-action-btn vertical click-to-toggle">
         <a class="btn-floating btn-large btn">
           <i class="material-icons">menu</i>
         </a>
         <ul>
-          <!--<li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>-->
-          <!--<li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>-->
-          <!--<li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>-->
+          <li><a class="btn-floating blue" id="butAddMenu"><i class="material-icons">add</i></a></li>
           <li><a class="btn-floating red google_signing"><i class="material-icons">person</i></a></li>
         </ul>
       </div>
