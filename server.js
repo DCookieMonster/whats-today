@@ -137,14 +137,13 @@ app.post('/sign_in', function (req, res) {
             }
             var date = new Date();
             var cKey = user + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
-            cloth_ref
-                .orderByChild("ID")
-                .equalTo(cKey)
+            cloth_ref.child(cKey)
                 .once("value", function(snapshot) {
                     var clothing = snapshot.val();
-                    var date = new Date();
-                    var cKey = user + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
-                    data = {uid: user, clothing: clothing[cKey]};
+                    data = {uid: user};
+                    if (clothing){
+                        data['clothing'] = clothing;
+                    }
                     res.json(data);
                     res.status(200)
                 });
@@ -162,6 +161,37 @@ app.post('/sign_in', function (req, res) {
 
 
 });
+
+
+app.post('/sign_in/id', function (req, res) {
+    if (!req.body) {
+        res.status(400);
+    }
+    var data = {};
+    var id = req.body.uid;
+    var usersRef = ref.child("users");
+    usersRef.child(id)
+        .once('value', function(snapshot) {
+            var user = snapshot.val();
+            var date = new Date();
+            var cKey = user + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+            cloth_ref.child(cKey)
+                .once('value', function (snapshot) {
+                    var clothing = snapshot.val();
+                    data = {uid: user};
+                    if (clothing){
+                        data['clothing'] = clothing;
+                    }
+                    res.json(data);
+                    res.status(200)
+                })
+        })
+        .catch(function () {
+            res.status(401);
+
+        });
+});
+
 
 //To receive push request from client
 app.post('/send_notification', function (req, res) {

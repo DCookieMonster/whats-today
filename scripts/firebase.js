@@ -100,9 +100,27 @@ var toggleAddDialog2 = function (visible) {
 //
 window.addEventListener('load', function() {
     // initApp();
-    if (localStorage.uid && localStorage.uid != null){
+    if (app.city != '' && localStorage.uid && localStorage.uid != null){
         var user = JSON.parse(localStorage.user);
-        loginSuccess(user);
+        var data = {
+            uid: localStorage.uid,
+            created_at: new Date().getTime(),
+            city: app.city
+        };
+        $.ajax({
+            url: app.baseServerUrl + '/sign_in/id',
+            method: 'POST',
+            data: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            success: function (response) {
+                localStorage.uid = response.uid;
+                localStorage.user = JSON.stringify(data);
+                loginSuccess(user);
+            }
+        });
     }
 });
 
