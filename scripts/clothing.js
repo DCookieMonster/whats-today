@@ -1,5 +1,4 @@
-var app = window.app;
-
+var app = window.app || {};
 var clothClass = document.getElementsByClassName('cloth');
 for (var i = 0; i < clothClass.length; i++) {
     clothClass[i].addEventListener('click', function () {

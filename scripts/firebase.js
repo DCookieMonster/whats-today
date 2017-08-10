@@ -1,4 +1,5 @@
 // Initialize Firebase
+var app = window.app || {};
 var config = {
     apiKey: "AIzaSyCmvpuvKQdVzaZYpIRz6paxjUkFZpclp3k",
     authDomain: "whats-today-pwa.firebaseapp.com",
