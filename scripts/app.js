@@ -559,7 +559,7 @@
 
   // TODO add startup code here
   app.selectedCities = localStorage.selectedCities;
-  if (app.selectedCities == null && app.selectedCities != {}) {
+  if (app.selectedCities && app.selectedCities == null && app.selectedCities != {}) {
 
     app.selectedCities = JSON.parse(app.selectedCities);
     app.getForecast(app.selectedCities.key, app.selectedCities.label);

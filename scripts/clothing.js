@@ -19,7 +19,8 @@
                         chosen_cloth: clothing[clothing.length - 1],
                         city: app.city,
                         temp: app.temp,
-                        uid: localStorage.uid
+                        uid: localStorage.uid,
+                        time: new Date().getTime()
                     };
                     sendDataToClothingServer(data, false)
 
@@ -34,7 +35,8 @@
                         chosen_cloth: clothing[clothing.length - 1],
                         city: app.city,
                         temp: app.temp,
-                        uid: localStorage.uid
+                        uid: localStorage.uid,
+                        time: new Date().getTime()
                     };
                     sendDataToClothingServer(data, true)
 
@@ -68,16 +70,13 @@ function sendDataToClothingServer(data, chose_clothing) {
     else{
         var sefix = 'unchose_clothing'
     }
-    // fetch(app.baseServerUrl + '/' + sefix, {
-    //     method: 'post',
-    //     headers: {
-    //         'Accept': 'application/json',
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(data)
-    // })
-    //     .then(function (response) {
-    //         return response.json();
-    //     })
+    fetch(app.baseServerUrl + '/' + sefix, {
+        method: 'post',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
 
 }

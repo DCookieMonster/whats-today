@@ -55,19 +55,21 @@ app.post('/chose_clothing', function (req, res) {
     if (!req.body) {
         res.status(400);
     }
+    var date = new Date();
+    var key = req.body.uid + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
 
-    var clothing = req.body['clothing'];
-    cloth_ref.orderByChild("ID").equalTo(req.body.uid).once("value", function(snapshot) {
+    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
         var userData = snapshot.val();
         if (userData){
             console.log("exists!");
-            var data = {}
+            var data = { updated_at: new Date().getTime() };
             data[req.body.chosen_cloth] = true;
-            cloth_ref.child(req.body.uid).update(data)
+            cloth_ref.child(key).update(data)
         }
         else{
+
                 var data = {
-                    ID: req.body.uid,
+                    ID: key,
                     coat: false,
                     umbrella: false,
                     shorts: false,
@@ -80,12 +82,13 @@ app.post('/chose_clothing', function (req, res) {
                     flip_flop: false,
                     mittens: false,
                     shoes: false,
+                    user_id: req.body.uid,
                     temp: req.body.temp,
                     city: req.body.city,
-                    created_at: new Date().getTime()
+                    created_at: date
                 };
                 data[req.body.chosen_cloth] = true;
-            cloth_ref.child(req.body.uid).set(data)
+            cloth_ref.child(key).set(data)
 
 
         }
@@ -98,8 +101,9 @@ app.post('/unchose_clothing', function (req, res) {
         res.status(400);
     }
 
-    var clothing = req.body['clothing'];
-    cloth_ref.orderByChild("ID").equalTo(req.body.uid).once("value", function(snapshot) {
+    var date = new Date();
+    var key = req.body.uid + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
         var userData = snapshot.val();
         if (userData) {
             console.log("exists!");
@@ -116,12 +120,52 @@ app.post('/sign_in', function (req, res) {
     if (!req.body) {
         res.status(400);
     }
+    var data = {};
+    var email = req.body.email;
     var usersRef = ref.child("users");
-    usersRef.set(
-        req.body
-    );
+    usersRef.orderByChild("email").equalTo(email).once("value", function(snapshot) {
+        var userData = snapshot.val();
+        if (userData){
+            for (var key in userData){
+                var user = key;
+            }
+            var date = new Date();
+            var cKey = user + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+            cloth_ref
+                .orderByChild("ID")
+                .equalTo(cKey)
+                .once("value", function(snapshot) {
+                    var clothing = snapshot.val();
+                    var date = new Date();
+                    var cKey = user + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+                    data = {uid: user, clothing: clothing[cKey]};
+                    res.json(data);
+                    res.status(200)
+                });
+
+        }
+        else{
+            var newUser = usersRef.push(
+                req.body
+            );
+            data = {uid: newUser.key};
+            res.json(data);
+            res.status(200)
+        }
+    });
+
 
 });
+
+Date.prototype.yyyymmdd = function() {
+    var mm = this.getMonth() + 1; // getMonth() is zero-based
+    var dd = this.getDate();
+
+    return [this.getFullYear(),
+        (mm>9 ? '' : '0') + mm,
+        (dd>9 ? '' : '0') + dd
+    ].join('');
+};
 
 //To receive push request from client
 app.post('/send_notification', function (req, res) {
@@ -159,3 +203,4 @@ app.post('/send_notification', function (req, res) {
     }
   });
 });
+
