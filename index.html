@@ -55,15 +55,11 @@
             <div class="icon"></div>
             <div class="temperature">
               <span class="value"></span><span class="scale">°C</span>
-                <!--<div style='font-size: 0.25em;' class=" humidity"></div>-->
-              <!--<div class="description" style="    font-size: 0.25em;"></div>-->
-
             </div>
-            <div class="temperature" style="padding-top: 8%;padding-left: 5%">
-              <div style='font-size: 0.25em;' class=" humidity"></div>
-              <div class="description" style="    font-size: 0.25em;"></div>
-
-            </div>
+          </div>
+          <div class="description" style="padding-top: 2%">
+            <div class=" humidity"></div>
+            <div class="weather-description"></div>
           </div>
         </div>
         <div class="future">
@@ -140,24 +136,39 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card feedback">
+        <div class="row" style="padding-bottom: 2%">
+          <div class="col s12 m12">
+            <h5 style="font-size: 1.24em" class="feedback-header">How do you feel with what you wore today?</h5>
+          </div>
+        </div>
+        <div class="row feedback-btns">
+          <div class="center">
+            <a class="waves-effect waves-light btn feeling-btn">Warm</a>
+            <a class="waves-effect waves-light btn feeling-btn">OK</a>
+            <a class="waves-effect waves-light btn feeling-btn">Cold</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card choose-clothing">
         <div class="row" style="padding-bottom: 2%">
           <div class="col s12 m12">
             <h5 style="font-size: 1.24em" class="wearing-header">How warm is what you wore today?</h5>
           </div>
         </div>
           <div class="row">
-            <div class="col s3 m2">
-              <img class="center cloth" width="100%" src="images/clothing/jersey.png">
+            <div class="col s3 m3">
+              <img class="center cloth" width="100%" src="images/warm_levels/light.png">
             </div>
-            <div class="col s3 m2">
-              <img class="center cloth" width="100%"  src="images/clothing/t_shirt.png">
+            <div class="col s3 m3">
+              <img class="center cloth" width="100%"  src="images/warm_levels/mid-light.png">
             </div>
-            <div class="col s3 m2">
-              <img class="center cloth" width="100%"  src="images/clothing/shirt.png">
+            <div class="col s3 m3">
+              <img class="center cloth" width="100%"  src="images/warm_levels/mid.png">
             </div>
-            <div class="col s3 m2">
-              <img class="center cloth" width="100%"  src="images/clothing/coat.png">
+            <div class="col s3 m3">
+              <img class="center cloth" width="100%"  src="images/warm_levels/hot.png">
             </div>
           </div>
       </div>
@@ -193,6 +204,7 @@
         </a>
         <ul>
           <li><a class="btn-floating blue" id="butAddMenu"><i class="material-icons">add</i></a></li>
+          <li><a class="btn-floating green" id="editLevel"><i class="material-icons">edit</i></a></li>
           <li><a class="btn-floating red google_signing"><i class="material-icons">person</i></a></li>
         </ul>
       </div>
@@ -204,27 +216,14 @@
       <!-- Toast msg -->
       <div class="toast__msg"></div>
     </div>
-    <script>
-        window.app = {
-            isLoading: true,
-            visibleCards: {},
-            selectedCities: {},
-            spinner: document.querySelector('.loader'),
-            cardTemplate: document.querySelector('.cardTemplate'),
-            container: document.querySelector('.main'),
-            addDialog: document.querySelector('.dialog-container'),
-            baseServerUrl: 'https://whats-today.herokuapp.com', //'http://localhost:3000', //
-            city: '',
-            temp: '',
-            daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        };
-    </script>
+
      <script
     src="https://code.jquery.com/jquery-3.2.1.min.js"
     integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
     <!-- Uncomment the line below when ready to test with fake data -->
+    <script src="scripts/init.js" async></script>
         <script src="scripts/offline.js" async></script>
     <script src="scripts/toast.js" async></script>
 

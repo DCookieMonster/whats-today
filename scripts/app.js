@@ -139,7 +139,7 @@
         }
         cardLastUpdatedElem.textContent = data.created;
 
-        card.querySelector('.temperature .description').textContent = current.text;
+        card.querySelector('.weather-description').textContent = current.text;
         card.querySelector('.date').textContent = current.date;
         card.querySelector('.current .icon').classList.add(app.getIconClass(current.code));
         card.querySelector('.current .temperature .value').textContent =

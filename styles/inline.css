@@ -517,3 +517,7 @@ body {
 .cloth{
   cursor: pointer;
 }
+
+.feedback{
+  display: none;
+}

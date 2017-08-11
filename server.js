@@ -24,7 +24,7 @@ app.listen(process.env.PORT || 3000, function() {
 
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 var serviceAccount = require("./keys/serviceAccountKey.json");
 
@@ -37,9 +37,6 @@ admin.initializeApp({
 var db = admin.database();
 var cloth_ref = db.ref("clothing");
 var ref = db.ref("accounts");
-// ref.once("value", function(snapshot) {
-//     // console.log(snapshot.val());
-// });
 
 
 //To server static assests in root dir
@@ -62,12 +59,11 @@ app.post('/chose_clothing', function (req, res) {
         res.status(400);
     }
     var date = new Date();
-    var key = req.body.uid + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+    var key = req.body.uid + '_' + date.yyyymmdd();
 
     cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
         var userData = snapshot.val();
         if (userData){
-            console.log("exists!");
             var data = { updated_at: new Date().getTime() };
             data[req.body.chosen_cloth] = true;
             cloth_ref.child(key).update(data)
@@ -108,7 +104,7 @@ app.post('/unchose_clothing', function (req, res) {
     }
 
     var date = new Date();
-    var key = req.body.uid + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+    var key = req.body.uid + '_' + date.yyyymmdd();
     cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
         var userData = snapshot.val();
         if (userData) {
@@ -136,7 +132,7 @@ app.post('/sign_in', function (req, res) {
                 var user = key;
             }
             var date = new Date();
-            var cKey = user + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+            var cKey = user + '_' + date.yyyymmdd();
             cloth_ref.child(cKey)
                 .once("value", function(snapshot) {
                     var clothing = snapshot.val();
@@ -168,7 +164,7 @@ app.post('/warm_level', function (req, res) {
         res.status(400);
     }
     var date = new Date(req.body.time);
-    var key = req.body.uid + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+    var key = req.body.uid  + '_' + date.yyyymmdd();
 
     cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
         var clothingInfo = snapshot.val();
@@ -202,7 +198,7 @@ app.post('/sign_in/id', function (req, res) {
         .once('value', function(snapshot) {
             var user_id = snapshot.key;
             var date = new Date();
-            var cKey = id + '_' + req.body.city.replace(' ', '_') + '_' +date.yyyymmdd();
+            var cKey = id  + '_' + date.yyyymmdd();
             cloth_ref.child(cKey)
                 .once('value', function (snapshot) {
                     var clothing = snapshot.val();
@@ -224,6 +220,35 @@ app.post('/sign_in/id', function (req, res) {
 
         });
 });
+
+
+// ROUTES FOR OUR WARM LEVEL API
+// =============================================================================
+var router = express.Router();              // get an instance of the express Router
+
+app.use('/warm_level',router);
+
+// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+router.post('/feeling', function(req, res) {
+    if (!req.body) {
+        res.status(400);
+    }
+    var date = new Date(req.body.time);
+    var key = req.body.uid  + '_' + date.yyyymmdd();
+
+    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
+        var clothingInfo = snapshot.val();
+        if (clothingInfo) {
+            var data = { feeling: req.body.feeling };
+            cloth_ref.child(key).update(data)
+        }
+        else{
+            res.json({error: 'wrong keys'});
+            res.status(400)
+        }
+
+    })});
+
 
 
 //To receive push request from client
