@@ -140,8 +140,8 @@ app.recommendedClothing = function (user_id, temp) {
             card.querySelector('.recommended-feeling').textContent = recommended.feeling;
             var date = new Date(recommended.created_at);
             var date_s = date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
-            card.querySelector('.recommended-time').textContent = date_s;
-            card.querySelector('.recommended-place').textContent = recommended.city;
+            // card.querySelector('.recommended-time').textContent = date_s;
+            // card.querySelector('.recommended-place').textContent = recommended.city;
             $(card).show();
         }
     });

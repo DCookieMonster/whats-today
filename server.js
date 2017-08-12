@@ -213,7 +213,7 @@ router.get('/recommended', function (req, res) {
                     continue;
                 }
                 var temp = parseInt(req.query.temp);
-                if (clothing.temp < temp + 2 && clothing.temp > temp - 2){
+                if (clothing.temp < temp + 4 && clothing.temp > temp - 4){
                     res.json({recommended: clothing});
                     res.status(200);
                     return;
