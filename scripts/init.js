@@ -25,5 +25,5 @@ window.app = {
 
 if (!localStorage.uid || localStorage.uid == ''){
     var sign_in = document.querySelector('.sign-in');
-    $(sign_in).show();
+    $(sign_in).hide();
 }

@@ -358,7 +358,7 @@
 
     app.deleteCity = function (city) {
         app.selectedCities = null;
-        delete app.visibleCards[city.toLowerCase()];
+        for (var member in app.visibleCards) delete app.visibleCards[member];
         var cards = document.getElementsByClassName('card');
         for (var i = cards.length - 1; i >= 0; i--) {
             var cityCard = cards[i].querySelector('.city-id');
@@ -518,41 +518,10 @@
      *   Instead, check out IDB (https://www.npmjs.com/package/idb) or
      *   SimpleDB (https://gist.github.com/inexorabletash/c8069c042b734519680c)
      ************************************************************************/
-    // Check for Geolocation API permissions
-    // navigator.permissions.query({
-    //     name: 'geolocation'
-    //   })
-    //   .then(function(permissionStatus) {
-    //     if (permissionStatus.state == 'granted') {
-    //       navigator.geolocation.getCurrentPosition(function(location) {
-    //         console.log(location.coords.latitude);
-    //         console.log(location.coords.longitude);
-    //         app.getForecast('', '', {
-    //           'latitude': location.coords.latitude,
-    //           'longitude': location.coords.longitude
-    //         });
-    //       });
-    //     }
-    //     console.log('geolocation permission state is ', permissionStatus.state);
-
-    //     permissionStatus.onchange = function() {
-    //       console.log('geolocation permission state has changed to ', this.state);
-    //       if (permissionStatus.state == 'granted') {
-    //         navigator.geolocation.getCurrentPosition(function(location) {
-    //           console.log(location.coords.latitude);
-    //           console.log(location.coords.longitude);
-    //           app.getForecast('', '', {
-    //             'latitude': location.coords.latitude,
-    //             'longitude': location.coords.longitude
-    //           });
-    //         });
-    //       }
-    //     };
-    //   });
 
     // TODO add startup code here
     app.selectedCities = localStorage.selectedCities;
-    if (app.selectedCities && app.selectedCities == null && app.selectedCities != {}) {
+    if (app.selectedCities && app.selectedCities != null && app.selectedCities != {}) {
 
         app.selectedCities = JSON.parse(app.selectedCities);
         app.getForecast(app.selectedCities.key, app.selectedCities.label);
