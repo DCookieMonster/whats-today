@@ -1,0 +1,33 @@
+{
+  "name": "google-signin-button",
+  "homepage": "https://github.com/appellation/google-signin-button",
+  "authors": [
+    "appellation <nelson.will@live.com>"
+  ],
+  "description": "Custom Google sign-in buttons",
+  "main": "",
+  "keywords": [
+    "google",
+    "sign-in",
+    "branding"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "version": "1.1.1",
+  "_release": "1.1.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.1",
+    "commit": "c6da103dcc0c0fc9b6ba40c734a068d8926cee2d"
+  },
+  "_source": "https://github.com/appellation/google-signin-button.git",
+  "_target": "^1.1.1",
+  "_originalSource": "google-signin-button",
+  "_direct": true
+}

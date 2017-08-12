@@ -28,7 +28,8 @@ for (var i = 0; i < clothClass.length; i++) {
                 uid: localStorage.uid,
                 time: new Date().getTime()
             };
-            sendDataToClothingServer(data);
+        localStorage.feeling = false;
+        sendDataToClothingServer(data);
             app.LevelChosen();
         }
     )
@@ -67,6 +68,9 @@ app.setWarmLevel = function (warmLevel) {
 app.LevelChosen = function () {
     var wearingCard = document.querySelector('.choose-clothing');
     // $(wearingCard).hide();
+    if (localStorage.feeling){
+        return;
+    }
     var feedback = document.querySelector('.feedback');
     $(feedback).show();
 };
@@ -108,6 +112,7 @@ for (var j = 0; j < feelingBtn.length; j++) {
             uid: localStorage.uid,
             time: new Date().getTime()
         };
+        localStorage.feeling = true;
         sendDataToFeelingServer(data);
         app.feelingChosen();
         }

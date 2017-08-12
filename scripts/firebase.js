@@ -8,6 +8,12 @@ googleSigninElement.addEventListener('click', function () {
     firebase.auth().signInWithRedirect(provider);
 });
 
+var googleSigninLogoElement = document.querySelector('.google-auth');
+//Click event for subscribe push
+googleSigninLogoElement.addEventListener('click', function () {
+    firebase.auth().signInWithRedirect(provider);
+});
+
 firebase.auth().getRedirectResult().then(function (result) {
     if (result.credential) {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -57,8 +63,18 @@ app.loginSuccess = function(user) {
         $(googleButton).empty();
         googleButton.innerHTML = "<img src='" + user.photoURL + "' width='100%'>";
     }
+    var clothing = document.querySelector('.choose-clothing');
+    $(clothing).show();
+    var sign_in = document.querySelector('.sign-in');
+    $(sign_in).hide();
     app.recommendedClothing(localStorage.uid, app.temp);
 };
+
+app.failedLogin = function() {
+    var sign_in = document.querySelector('.sign-in');
+    $(sign_in).show();
+};
+
 
 app.silentSignIn = function () {
     if (app.city != '' && localStorage.uid && localStorage.uid != null){
@@ -80,9 +96,13 @@ app.silentSignIn = function () {
                 localStorage.uid = response.uid;
                 if (response.clothing){
                     app.setWarmLevel(response.clothing.warm_level);
-                    localStorage.clothing = response.clothing;
+                    localStorage.clothing = JSON.stringify(response.clothing);
                 }
                 app.loginSuccess(user);
+            },
+            error: function (response) {
+                app.failedLogin();
+
             }
         });
     }

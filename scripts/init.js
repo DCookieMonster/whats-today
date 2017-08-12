@@ -16,8 +16,14 @@ window.app = {
     cardTemplate: document.querySelector('.cardTemplate'),
     container: document.querySelector('.main'),
     addDialog: document.querySelector('.dialog-container'),
-    baseServerUrl: 'http://localhost:3000', //'https://whats-today.herokuapp.com', //
+    baseServerUrl: 'https://whats-today.herokuapp.com', //'http://localhost:3000', //
     city: '',
     temp: '',
     daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 };
+
+
+if (!localStorage.uid || localStorage.uid == ''){
+    var sign_in = document.querySelector('.sign-in');
+    $(sign_in).show();
+}

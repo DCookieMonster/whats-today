@@ -54,7 +54,13 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/sign_in', function (req, res) {
+// ROUTES FOR OUR SIGN IN API
+// =============================================================================
+var signInRouter = express.Router();              // get an instance of the express Router
+
+app.use('/sign_in',signInRouter);
+
+signInRouter.post('/', function (req, res) {
     if (!req.body) {
         res.status(400);
     }
@@ -94,36 +100,7 @@ app.post('/sign_in', function (req, res) {
 
 });
 
-
-app.post('/warm_level', function (req, res) {
-    if (!req.body) {
-        res.status(400);
-    }
-    var date = new Date(req.body.time);
-    var key = req.body.uid  + '_' + date.yyyymmdd();
-
-    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
-        var clothingInfo = snapshot.val();
-        if (clothingInfo) {
-            var data = { warm_level: req.body.warm_level };
-            cloth_ref.child(key).update(data)
-        }
-        else{
-            var data = {
-                ID: key,
-                warm_level: req.body.warm_level,
-                user_id: req.body.uid,
-                temp: req.body.temp,
-                city: req.body.city,
-                created_at: date.getTime()
-            };
-            cloth_ref.child(key).set(data)
-        }
-
-    })
-});
-
-app.post('/sign_in/id', function (req, res) {
+signInRouter.post('/id', function (req, res) {
     if (!req.body) {
         res.status(400);
     }
@@ -163,6 +140,35 @@ app.post('/sign_in/id', function (req, res) {
 var router = express.Router();              // get an instance of the express Router
 
 app.use('/warm_level',router);
+
+router.post('/', function (req, res) {
+    if (!req.body) {
+        res.status(400);
+    }
+    var date = new Date(req.body.time);
+    var key = req.body.uid  + '_' + date.yyyymmdd();
+
+    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
+        var clothingInfo = snapshot.val();
+        if (clothingInfo) {
+            var data = { warm_level: req.body.warm_level };
+            cloth_ref.child(key).update(data)
+        }
+        else{
+            var data = {
+                ID: key,
+                warm_level: req.body.warm_level,
+                user_id: req.body.uid,
+                temp: req.body.temp,
+                city: req.body.city,
+                created_at: date.getTime()
+            };
+            cloth_ref.child(key).set(data)
+        }
+
+    })
+});
+
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.post('/feeling', function(req, res) {

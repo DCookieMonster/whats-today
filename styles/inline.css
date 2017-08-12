@@ -518,13 +518,10 @@ body {
   cursor: pointer;
 }
 
-.feedback{
+.feedback, .choose-clothing, .recommended-card, .sign-in{
   display: none;
 }
 
-.recommended-card{
-  display: none;
-}
 .recommended-img .icon.light {
   background-image: url("../images/warm_levels/light.png"); }
 .recommended-img .icon.mid-light {
