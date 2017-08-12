@@ -25,9 +25,9 @@ signOutElement.addEventListener('click', function () {
     var sign_in = document.querySelector('.sign-in');
     $(sign_in).show();
     var edit = document.getElementById('editLevel');
-    $(edit).hide();
+    edit.className = " disabled";
     var signOut =  document.getElementById('signOut');
-    $(signOut).hide();
+    signOut.className = " disabled";
     var card = document.querySelector('.recommended-card');
     $(card).hide();
 });
@@ -86,10 +86,8 @@ app.loginSuccess = function(user) {
     $(clothing).show();
     var sign_in = document.querySelector('.sign-in');
     $(sign_in).hide();
-    var edit = document.getElementById('editLevel');
-    $(edit).show();
-    var signOut = document.getElementById('signOut');
-    $(signOut).show();
+    var signOut =  document.getElementById('signOut');
+    signOut.classList.remove('disabled');
 
     app.recommendedClothing(localStorage.uid, app.temp);
 };

@@ -67,6 +67,8 @@ app.setWarmLevel = function (warmLevel) {
 
 app.LevelChosen = function () {
     if (localStorage.feeling == 'true'){
+        var edit = document.getElementById('editLevel');
+        edit.classList.remove('disabled');
         return;
     }
     var feedback = document.querySelector('.feedback');
@@ -84,6 +86,8 @@ document.getElementById('editLevel').addEventListener('click', function () {
 
 app.feelingChosen = function () {
     toast('Thank You For Your Feedback');
+    var edit = document.getElementById('editLevel');
+    edit.classList.remove('disabled');
     var feedback = document.querySelector('.feedback');
     $(feedback).hide();
 };

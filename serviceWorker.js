@@ -12,39 +12,39 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var dataCacheName = 'weatherData-v3';
-var cacheName = 'weatherPWA-3';
+var dataCacheName = 'weatherData-v4';
+var cacheName = 'weatherPWA-4';
 var filesToCache = [
-  '/',
-  '/index.html',
-  '/scripts/app.js',
-  '/scripts/push.js',
-  '/scripts/firebase.js',
-  '/scripts/clothing.js',
-  '/scripts/toast.js',
-  '/scripts/init.js',
-  '/styles/inline.css',
-  '/images/clear.png',
-  '/images/cloudy-scattered-showers.png',
-  '/images/cloudy.png',
-  '/images/fog.png',
-  '/images/ic_add_white_24px.svg',
-  '/images/ic_refresh_white_24px.svg',
-  '/images/partly-cloudy.png',
-  '/images/rain.png',
-  '/images/scattered-showers.png',
-  '/images/sleet.png',
-  '/images/snow.png',
-  '/images/thunderstorm.png',
-  '/images/wind.png',
-  '/images/warm_levels/hot.png',
-  '/images/warm_levels/hot-f.png',
-  '/images/warm_levels/light.png',
-  '/images/warm_levels/light-f.png',
-  '/images/warm_levels/mid-light.png',
-  '/images/warm_levels/mid-light-f.png',
-  '/images/warm_levels/mid-f.png',
-  '/images/warm_levels/mid.png'
+  // '/',
+  // '/index.html',
+  // '/scripts/app.js',
+  // '/scripts/push.js',
+  // '/scripts/firebase.js',
+  // '/scripts/clothing.js',
+  // '/scripts/toast.js',
+  // '/scripts/init.js',
+  // '/styles/inline.css',
+  // '/images/clear.png',
+  // '/images/cloudy-scattered-showers.png',
+  // '/images/cloudy.png',
+  // '/images/fog.png',
+  // '/images/ic_add_white_24px.svg',
+  // '/images/ic_refresh_white_24px.svg',
+  // '/images/partly-cloudy.png',
+  // '/images/rain.png',
+  // '/images/scattered-showers.png',
+  // '/images/sleet.png',
+  // '/images/snow.png',
+  // '/images/thunderstorm.png',
+  // '/images/wind.png',
+  // '/images/warm_levels/hot.png',
+  // '/images/warm_levels/hot-f.png',
+  // '/images/warm_levels/light.png',
+  // '/images/warm_levels/light-f.png',
+  // '/images/warm_levels/mid-light.png',
+  // '/images/warm_levels/mid-light-f.png',
+  // '/images/warm_levels/mid-f.png',
+  // '/images/warm_levels/mid.png'
 ];
 
 self.addEventListener('install', function(e) {

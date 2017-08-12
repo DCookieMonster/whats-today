@@ -518,8 +518,7 @@ body {
   cursor: pointer;
 }
 
-.feedback, .choose-clothing, .recommended-card, .sign-in,
-.not-start{
+.feedback, .choose-clothing, .recommended-card, .sign-in{
   display: none;
 }
 
