@@ -66,9 +66,7 @@ app.setWarmLevel = function (warmLevel) {
 };
 
 app.LevelChosen = function () {
-    var wearingCard = document.querySelector('.choose-clothing');
-    // $(wearingCard).hide();
-    if (localStorage.feeling){
+    if (localStorage.feeling == 'true'){
         return;
     }
     var feedback = document.querySelector('.feedback');
@@ -76,8 +74,6 @@ app.LevelChosen = function () {
 };
 
 app.LevelUnChosen = function () {
-    // var wearingCard = document.querySelector('.choose-clothing');
-    // $(wearingCard).show();
     var feedback = document.querySelector('.feedback');
     $(feedback).show();
 };

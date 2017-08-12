@@ -14,26 +14,38 @@
 
 var dataCacheName = 'weatherData-v2-test';
 var cacheName = 'weatherPWA-2-test';
-var filesToCache = [];
-//   '/',
-//   '/index.html',
-//   '/scripts/app.js',
-//   '/scripts/push.js',
-//   '/styles/inline.css',
-//   '/images/clear.png',
-//   '/images/cloudy-scattered-showers.png',
-//   '/images/cloudy.png',
-//   '/images/fog.png',
-//   '/images/ic_add_white_24px.svg',
-//   '/images/ic_refresh_white_24px.svg',
-//   '/images/partly-cloudy.png',
-//   '/images/rain.png',
-//   '/images/scattered-showers.png',
-//   '/images/sleet.png',
-//   '/images/snow.png',
-//   '/images/thunderstorm.png',
-//   '/images/wind.png'
-// ];
+var filesToCache = [
+  '/',
+  '/index.html',
+  '/scripts/app.js',
+  '/scripts/push.js',
+  '/scripts/firebase.js',
+  '/scripts/clothing.js',
+  '/scripts/toast.js',
+  '/scripts/init.js',
+  '/styles/inline.css',
+  '/images/clear.png',
+  '/images/cloudy-scattered-showers.png',
+  '/images/cloudy.png',
+  '/images/fog.png',
+  '/images/ic_add_white_24px.svg',
+  '/images/ic_refresh_white_24px.svg',
+  '/images/partly-cloudy.png',
+  '/images/rain.png',
+  '/images/scattered-showers.png',
+  '/images/sleet.png',
+  '/images/snow.png',
+  '/images/thunderstorm.png',
+  '/images/wind.png',
+  '/images/warm_levels/hot.png',
+  '/images/warm_levels/hot-f.png',
+  '/images/warm_levels/light.png',
+  '/images/warm_levels/light-f.png',
+  '/images/warm_levels/mid-light.png',
+  '/images/warm_levels/mid-light-f.png',
+  '/images/warm_levels/mid-f.png',
+  '/images/warm_levels/mid.png'
+];
 
 self.addEventListener('install', function(e) {
   console.log('[ServiceWorker] Install');
