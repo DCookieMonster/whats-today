@@ -122,7 +122,7 @@
             data.label = city;
             card.removeAttribute('hidden');
             app.container.appendChild(card);
-            app.visibleCards[city.toLowerCase()] = card;
+            app.visibleCards[app.city.toLowerCase()] = card;
         }
 
         // Verifies the data provide is newer than what's already visible
@@ -358,7 +358,9 @@
 
     app.deleteCity = function (city) {
         app.selectedCities = null;
-        for (var member in app.visibleCards) delete app.visibleCards[member];
+        if (app.visibleCards && app.visibleCards != null){
+            for (var member in app.visibleCards) delete app.visibleCards[member];
+        }
         var cards = document.getElementsByClassName('card');
         for (var i = cards.length - 1; i >= 0; i--) {
             var cityCard = cards[i].querySelector('.city-id');
