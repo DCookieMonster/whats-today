@@ -14,6 +14,25 @@ googleSigninLogoElement.addEventListener('click', function () {
     firebase.auth().signInWithRedirect(provider);
 });
 
+var signOutElement = document.getElementById('signOut');
+//Click event for subscribe push
+signOutElement.addEventListener('click', function () {
+    localStorage.removeItem('uid');
+    var googleButton = document.querySelector('.google_signing');
+    googleButton.innerHTML = '<i class="material-icons">person</i>';
+    var clothing = document.querySelector('.choose-clothing');
+    $(clothing).hide();
+    var sign_in = document.querySelector('.sign-in');
+    $(sign_in).show();
+    var edit = document.getElementById('editLevel');
+    $(edit).hide();
+    var signOut =  document.getElementById('signOut');
+    $(signOut).hide();
+    var card = document.querySelector('.recommended-card');
+    $(card).hide();
+});
+
+
 firebase.auth().getRedirectResult().then(function (result) {
     if (result.credential) {
         // This gives you a Google Access Token. You can use it to access the Google API.
@@ -67,6 +86,11 @@ app.loginSuccess = function(user) {
     $(clothing).show();
     var sign_in = document.querySelector('.sign-in');
     $(sign_in).hide();
+    var edit = document.getElementById('editLevel');
+    $(edit).show();
+    var signOut = document.getElementById('signOut');
+    $(signOut).show();
+
     app.recommendedClothing(localStorage.uid, app.temp);
 };
 
@@ -77,6 +101,9 @@ app.failedLogin = function() {
 
 
 app.silentSignIn = function () {
+    if (localStorage.uid == null || localStorage.uid == 'null'){
+        app.failedLogin();
+    }
     if (app.city != '' && localStorage.uid && localStorage.uid != null){
         var user = JSON.parse(localStorage.user);
         var data = {

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var dataCacheName = 'weatherData-v2-test';
-var cacheName = 'weatherPWA-2-test';
+var dataCacheName = 'weatherData-v3';
+var cacheName = 'weatherPWA-3';
 var filesToCache = [
   '/',
   '/index.html',
