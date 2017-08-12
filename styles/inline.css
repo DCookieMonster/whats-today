@@ -521,3 +521,27 @@ body {
 .feedback{
   display: none;
 }
+
+.recommended-card{
+  display: none;
+}
+.recommended-img .icon.light {
+  background-image: url("../images/warm_levels/light.png"); }
+.recommended-img .icon.mid-light {
+  background-image: url("../images/warm_levels/mid-light.png"); }
+.recommended-img .icon.mid {
+  background-image: url("../images/warm_levels/mid.png"); }
+.recommended-img .icon.hot {
+  background-image: url("../images/warm_levels/hot.png"); }
+.recommended-card .recommended-temperature:before {
+  content: "Temperature Was: ";
+  color: #888; }
+.recommended-card .recommended-feeling:before {
+  content: "You Felt: ";
+  color: #888; }
+.recommended-card .recommended-time:before {
+  content: "When: ";
+  color: #888; }
+.recommended-card .recommended-place:before {
+  content: "Where: ";
+  color: #888; }

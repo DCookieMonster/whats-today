@@ -57,8 +57,7 @@ app.loginSuccess = function(user) {
         $(googleButton).empty();
         googleButton.innerHTML = "<img src='" + user.photoURL + "' width='100%'>";
     }
-    var card_title = document.querySelector('.wearing-header');
-    card_title.textContent = user.displayName + ', ' + card_title.textContent;
+    app.recommendedClothing(localStorage.uid, app.temp);
 };
 
 app.silentSignIn = function () {

@@ -66,16 +66,16 @@ app.setWarmLevel = function (warmLevel) {
 
 app.LevelChosen = function () {
     var wearingCard = document.querySelector('.choose-clothing');
-    $(wearingCard).hide();
+    // $(wearingCard).hide();
     var feedback = document.querySelector('.feedback');
     $(feedback).show();
 };
 
 app.LevelUnChosen = function () {
-    var wearingCard = document.querySelector('.choose-clothing');
-    $(wearingCard).show();
+    // var wearingCard = document.querySelector('.choose-clothing');
+    // $(wearingCard).show();
     var feedback = document.querySelector('.feedback');
-    $(feedback).hide();
+    $(feedback).show();
 };
 
 document.getElementById('editLevel').addEventListener('click', function () {
@@ -83,15 +83,9 @@ document.getElementById('editLevel').addEventListener('click', function () {
 });
 
 app.feelingChosen = function () {
-    var feedbackBtns = document.querySelector('.feedback-btns');
-    $(feedbackBtns).remove();
-    var feedbackHeader = document.querySelector('.feedback-header');
-    feedbackHeader.textContent = "Thank You For Your Feedback";
-    setTimeout(function () {
-        var feedback = document.querySelector('.feedback');
-        $(feedback).hide();
-    }, 1500);
-
+    toast('Thank You For Your Feedback');
+    var feedback = document.querySelector('.feedback');
+    $(feedback).hide();
 };
 
 function sendDataToFeelingServer(data) {
@@ -119,3 +113,31 @@ for (var j = 0; j < feelingBtn.length; j++) {
         }
     )
 }
+
+app.recommendedClothing = function (user_id, temp) {
+    $.ajax({
+        url: app.baseServerUrl + '/warm_level/recommended?uid=' + user_id + '&temp=' + temp,
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        success: function (response) {
+            var recommended = response.recommended;
+            if (Object.keys(recommended).length === 0 && recommended.constructor === Object){
+                return;
+            }
+            var card = document.querySelector('.recommended-card');
+            // card.querySelector('.icon').classList.add(recommended.warm_level);
+            card.querySelector('.icon').innerHTML =
+                '<img width="50px" src="images/warm_levels/' + recommended.warm_level + '.png">';
+            card.querySelector('.recommended-temperature .value').textContent = recommended.temp;
+            card.querySelector('.recommended-feeling').textContent = recommended.feeling;
+            var date = new Date(recommended.created_at);
+            var date_s = date.getDate() + '/' + (date.getMonth() + 1) + '/' +  date.getFullYear();
+            card.querySelector('.recommended-time').textContent = date_s;
+            card.querySelector('.recommended-place').textContent = recommended.city;
+            $(card).show();
+        }
+    });
+};

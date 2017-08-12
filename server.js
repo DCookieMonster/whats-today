@@ -54,70 +54,6 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/chose_clothing', function (req, res) {
-    if (!req.body) {
-        res.status(400);
-    }
-    var date = new Date();
-    var key = req.body.uid + '_' + date.yyyymmdd();
-
-    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
-        var userData = snapshot.val();
-        if (userData){
-            var data = { updated_at: new Date().getTime() };
-            data[req.body.chosen_cloth] = true;
-            cloth_ref.child(key).update(data)
-        }
-        else{
-
-                var data = {
-                    ID: key,
-                    coat: false,
-                    umbrella: false,
-                    shorts: false,
-                    t_shirt: false,
-                    shirt: false,
-                    boots: false,
-                    skirt: false,
-                    trousers: false,
-                    scarf: false,
-                    flip_flop: false,
-                    mittens: false,
-                    shoes: false,
-                    user_id: req.body.uid,
-                    temp: req.body.temp,
-                    city: req.body.city,
-                    created_at: date
-                };
-                data[req.body.chosen_cloth] = true;
-            cloth_ref.child(key).set(data)
-
-
-        }
-    });
-
-});
-
-app.post('/unchose_clothing', function (req, res) {
-    if (!req.body) {
-        res.status(400);
-    }
-
-    var date = new Date();
-    var key = req.body.uid + '_' + date.yyyymmdd();
-    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
-        var userData = snapshot.val();
-        if (userData) {
-            console.log("exists!");
-            var data = {};
-            data[req.body.chosen_cloth] = false;
-            cloth_ref.child(req.body.uid).update(data)
-        }
-    })
-
-
-});
-
 app.post('/sign_in', function (req, res) {
     if (!req.body) {
         res.status(400);
@@ -179,7 +115,7 @@ app.post('/warm_level', function (req, res) {
                 user_id: req.body.uid,
                 temp: req.body.temp,
                 city: req.body.city,
-                created_at: date
+                created_at: date.getTime()
             };
             cloth_ref.child(key).set(data)
         }
@@ -239,7 +175,10 @@ router.post('/feeling', function(req, res) {
     cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
         var clothingInfo = snapshot.val();
         if (clothingInfo) {
-            var data = { feeling: req.body.feeling };
+            var data = {
+                feeling: req.body.feeling,
+                feedbackTime: req.body.time
+            };
             cloth_ref.child(key).update(data)
         }
         else{
@@ -248,6 +187,44 @@ router.post('/feeling', function(req, res) {
         }
 
     })});
+
+router.get('/recommended', function (req, res) {
+    if (!req.body) {
+        res.status(400);
+    }
+    var key = req.query.uid  + '_';
+    cloth_ref.orderByChild("user_id").equalTo(req.query.uid).on("value", function(snapshot) {
+        var clothingInfo = snapshot.val();
+        if (clothingInfo) {
+            for (var key in clothingInfo){
+                var clothing = clothingInfo[key];
+                if (!clothing.feeling || clothing.feeling == null){
+                    continue;
+                }
+                var date = new Date();
+                var created_at = new Date(clothing.created_at);
+                if (created_at.yyyymmdd() == date.yyyymmdd()){
+                    continue;
+                }
+                var temp = parseInt(req.query.temp);
+                if (clothing.temp < temp + 2 && clothing.temp > temp - 2){
+                    res.json({recommended: clothing});
+                    res.status(200);
+                    return;
+                    break;
+                }
+            }
+            res.json({recommended: {} });
+            res.status(200)
+            return;
+        }
+        else {
+            res.json({recommended: {} });
+            res.status(200)
+        }
+    });
+
+});
 
 
 
