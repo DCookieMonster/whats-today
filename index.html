@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="canonical" href="https://weather-pwa-sample.firebaseapp.com/final/">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Whats Today</title>
-    <link rel="shortcut icon"  href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico"/>
     <!-- TODO add manifest here -->
     <link rel="manifest" href="/manifest.json">
     <!-- Add to home screen for Safari on iOS -->
@@ -16,7 +16,7 @@
     <link rel="apple-touch-icon" href="images/icons/icon-152x152.png">
     <meta name="msapplication-TileImage" content="images/icons/icon-144x144.png">
     <meta name="msapplication-TileColor" content="#4db6ac">
-      <meta name="theme-color" content="#4db6ac"/>
+    <meta name="theme-color" content="#4db6ac"/>
     <!-- Compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -25,255 +25,253 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
     <script src="https://cdn.firebase.com/libs/firebaseui/2.3.0/firebaseui.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.3.0/firebaseui.css" />
-  </head>
-  <body>
-    <header class="header">
-      <h1 class="header__title">What's Today</h1>
-      <button id="butRefresh" class="headerButton" aria-label="Refresh"></button>
-      <button id="butAdd" class="headerButton" aria-label="Add"><i class="material-icons">location_city</i></button>
-    </header>
-    <main class="main">
-      <div class="card cardTemplate weather-forecast" hidden>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.3.0/firebaseui.css"/>
+</head>
+<body>
+<header class="header">
+    <h1 class="header__title">What's Today</h1>
+    <button id="butRefresh" class="headerButton" aria-label="Refresh"></button>
+    <button id="butAdd" class="headerButton" aria-label="Add"></button>
+</header>
+<main class="main">
+    <div class="card cardTemplate weather-forecast" hidden>
         <div class="city-key" hidden></div>
         <div class="city-id" hidden></div>
         <div class="card-last-updated" hidden></div>
         <div class="row">
             <div class="col s11 m11">
-                    <div class="location"></div>
-                     <div class="date"></div>
+                <div class="location"></div>
+                <div class="date"></div>
             </div>
-            <div class="col s1 m1"> 
-            <i class="material-icons right btn-hidden butDelete">close</i>
+            <div class="col s1 m1">
+                <i class="material-icons right btn-hidden butDelete">close</i>
             </div>
         </div>
         <div class="description" style="padding-bottom: 2%">
-          <div class="yesterday"><span class="yesterday-diff"></span>°<span class="yesterday-info"></span></div>
+            <div class="yesterday"><span class="yesterday-diff"></span>°<span class="yesterday-info"></span></div>
         </div>
-       
+
         <div class="current">
-          <div class="visual">
-            <div class="icon"></div>
-            <div class="temperature">
-              <span class="value"></span><span class="scale">°C</span>
+            <div class="visual">
+                <div class="icon"></div>
+                <div class="temperature">
+                    <span class="value"></span><span class="scale">°C</span>
+                </div>
             </div>
-          </div>
-          <div class="description" style="padding-top: 2%">
-            <div class=" humidity"></div>
-            <div class="weather-description"></div>
-          </div>
+            <div class="description" style="padding-top: 2%">
+                <div class=" humidity"></div>
+                <div class="weather-description"></div>
+            </div>
         </div>
         <div class="future">
-          <div class="oneday">
-            <div class="date"></div>
-            <div class="icon"></div>
-            <div class="temp-high">
-              <span class="value"></span>°
+            <div class="oneday">
+                <div class="date"></div>
+                <div class="icon"></div>
+                <div class="temp-high">
+                    <span class="value"></span>°
+                </div>
+                <div class="temp-low">
+                    <span class="value"></span>°
+                </div>
             </div>
-            <div class="temp-low">
-              <span class="value"></span>°
+            <div class="oneday">
+                <div class="date"></div>
+                <div class="icon"></div>
+                <div class="temp-high">
+                    <span class="value"></span>°
+                </div>
+                <div class="temp-low">
+                    <span class="value"></span>°
+                </div>
             </div>
-          </div>
-          <div class="oneday">
-            <div class="date"></div>
-            <div class="icon"></div>
-            <div class="temp-high">
-              <span class="value"></span>°
+            <div class="oneday">
+                <div class="date"></div>
+                <div class="icon"></div>
+                <div class="temp-high">
+                    <span class="value"></span>°
+                </div>
+                <div class="temp-low">
+                    <span class="value"></span>°
+                </div>
             </div>
-            <div class="temp-low">
-              <span class="value"></span>°
+            <div class="oneday">
+                <div class="date"></div>
+                <div class="icon"></div>
+                <div class="temp-high">
+                    <span class="value"></span>°
+                </div>
+                <div class="temp-low">
+                    <span class="value"></span>°
+                </div>
             </div>
-          </div>
-          <div class="oneday">
-            <div class="date"></div>
-            <div class="icon"></div>
-            <div class="temp-high">
-              <span class="value"></span>°
+            <div class="oneday">
+                <div class="date"></div>
+                <div class="icon"></div>
+                <div class="temp-high">
+                    <span class="value"></span>°
+                </div>
+                <div class="temp-low">
+                    <span class="value"></span>°
+                </div>
             </div>
-            <div class="temp-low">
-              <span class="value"></span>°
+            <div class="oneday">
+                <div class="date"></div>
+                <div class="icon"></div>
+                <div class="temp-high">
+                    <span class="value"></span>°
+                </div>
+                <div class="temp-low">
+                    <span class="value"></span>°
+                </div>
             </div>
-          </div>
-          <div class="oneday">
-            <div class="date"></div>
-            <div class="icon"></div>
-            <div class="temp-high">
-              <span class="value"></span>°
+            <div class="oneday">
+                <div class="date"></div>
+                <div class="icon"></div>
+                <div class="temp-high">
+                    <span class="value"></span>°
+                </div>
+                <div class="temp-low">
+                    <span class="value"></span>°
+                </div>
             </div>
-            <div class="temp-low">
-              <span class="value"></span>°
-            </div>
-          </div>
-          <div class="oneday">
-            <div class="date"></div>
-            <div class="icon"></div>
-            <div class="temp-high">
-              <span class="value"></span>°
-            </div>
-            <div class="temp-low">
-              <span class="value"></span>°
-            </div>
-          </div>
-          <div class="oneday">
-            <div class="date"></div>
-            <div class="icon"></div>
-            <div class="temp-high">
-              <span class="value"></span>°
-            </div>
-            <div class="temp-low">
-              <span class="value"></span>°
-            </div>
-          </div>
-          <div class="oneday">
-            <div class="date"></div>
-            <div class="icon"></div>
-            <div class="temp-high">
-              <span class="value"></span>°
-            </div>
-            <div class="temp-low">
-              <span class="value"></span>°
-            </div>
-          </div>
         </div>
-      </div>
+    </div>
 
-      <div class="card recommended-card">
+    <div class="card recommended-card">
         <div class="row" style="padding-bottom: 2%">
-          <div class="col s12 m12">
-            <h5 style="font-size: 1.24em" class="feedback-header">From previous times, you wore:</h5>
-          </div>
+            <div class="col s12 m12">
+                <h5 style="font-size: 1.24em" class="feedback-header">From previous times, you wore:</h5>
+            </div>
         </div>
         <div class="row">
-         <div class="col s3 m3 recommended-img">
-           <div class="icon center"></div>
-         </div>
-          <div class="col s8 m8">
-            <div class="recommended-temperature">
-              <span class="value"></span>
-              <span class="scale">°C</span>
+            <div class="col s3 m3 recommended-img">
+                <div class="icon center"></div>
             </div>
-            <div class="recommended-feeling"></div>
-            <!--<div class="recommended-time"></div>-->
-            <!--<div class="recommended-place"></div>-->
-          </div>
-      </div>
-      </div>
+            <div class="col s8 m8">
+                <div class="recommended-temperature">
+                    <span class="value"></span>
+                    <span class="scale">°C</span>
+                </div>
+                <div class="recommended-feeling"></div>
+            </div>
+        </div>
+    </div>
 
-      <div class="card feedback">
+    <div class="card feedback">
         <div class="row">
-          <div class="col s12 m12">
-            <h5 style="font-size: 1.24em" class="feedback-header">Learn for next time <i class="material-icons right btn-hidden expand-btn" id="editFeedback">expand_more
-            </i>
-            </h5>
-            <p style="font-size: 1.1em" class="feedback-subtitle">How do you feel with what you wear today?</p>
-          </div>
+            <div class="col s12 m12">
+                <h5 style="font-size: 1.24em" class="feedback-header">Learn for next time <i
+                        class="material-icons right btn-hidden expand-btn" id="editFeedback">expand_more
+                </i>
+                </h5>
+                <p style="font-size: 1.1em" class="feedback-subtitle">How do you feel with what you wear today?</p>
+            </div>
         </div>
         <div class="row feedback-btns">
-          <div class="center">
-            <a class="waves-effect waves-light btn feeling-btn">Warm</a>
-            <a class="waves-effect waves-light btn feeling-btn">OK</a>
-            <a class="waves-effect waves-light btn feeling-btn">Cold</a>
-          </div>
+            <div class="center">
+                <a class="waves-effect waves-light btn feeling-btn">Warm</a>
+                <a class="waves-effect waves-light btn feeling-btn">OK</a>
+                <a class="waves-effect waves-light btn feeling-btn">Cold</a>
+            </div>
         </div>
-      </div>
+    </div>
 
-      <div class="card choose-clothing">
+    <div class="card choose-clothing">
         <div class="row" style="padding-bottom: 2%">
-          <div class="col s12 m12">
-            <h5 style="font-size: 1.24em" class="wearing-header">What are you wearing today? <i class="material-icons right btn-hidden expand-btn" id="editLevel">expand_more
-            </i></h5>
-          </div>
+            <div class="col s12 m12">
+                <h5 style="font-size: 1.24em" class="wearing-header">What are you wearing today? <i
+                        class="material-icons right btn-hidden expand-btn" id="editLevel">expand_more
+                </i></h5>
+            </div>
         </div>
-          <div class="row levels">
+        <div class="row levels">
             <div class="col s3 m3">
-              <img class="center cloth" width="100%" src="images/warm_levels/light.png">
+                <img class="center cloth" width="100%" src="images/warm_levels/light.png">
             </div>
             <div class="col s3 m3">
-              <img class="center cloth" width="100%"  src="images/warm_levels/mid-light.png">
+                <img class="center cloth" width="100%" src="images/warm_levels/mid-light.png">
             </div>
             <div class="col s3 m3">
-              <img class="center cloth" width="100%"  src="images/warm_levels/mid.png">
+                <img class="center cloth" width="100%" src="images/warm_levels/mid.png">
             </div>
             <div class="col s3 m3">
-              <img class="center cloth" width="100%"  src="images/warm_levels/hot.png">
+                <img class="center cloth" width="100%" src="images/warm_levels/hot.png">
             </div>
-          </div>
-      </div>
-      <div class="card sign-in">
+        </div>
+    </div>
+    <div class="card sign-in">
         <div class="row" style="padding-bottom: 2%">
-          <div class="col s12 m12">
-            <h5 style="font-size: 1.24em" class="sign-in-header">Don't be a stranger, Sign up!</h5>
-          </div>
+            <div class="col s12 m12">
+                <h5 style="font-size: 1.24em" class="sign-in-header">Don't be a stranger, Sign up!</h5>
+            </div>
         </div>
         <div class="row">
-          <div class="col s1 m1"></div>
-          <div class="col s10 m10 center">
-            <button class="google-auth google-light">
-              <span class="google-icon"></span>
-              <span class="google-text">Sign in with Google</span>
-            </button>          </div>
+            <div class="col s1 m1"></div>
+            <div class="col s10 m10 center">
+                <button class="google-auth google-light">
+                    <span class="google-icon"></span>
+                    <span class="google-text">Sign in with Google</span>
+                </button>
+            </div>
 
         </div>
-      </div>
-    </main>
+    </div>
+</main>
 
 
-    <div class="dialog-container">
-      <div class="dialog">
-        <!-- <div class="dialog-title">Add new city</div> -->
+<div class="dialog-container">
+    <div class="dialog">
         <div class="dialog-body" style="padding-bottom: 0;">
-          <div class="row">
-            <div class="input-field col s12">
-              <input type="text" name="selectCityToAdd" id='selectCityToAdd'>
-              <label for="selectCityToAdd">Change City</label>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input type="text" name="selectCityToAdd" id='selectCityToAdd'>
+                    <label for="selectCityToAdd">Change City</label>
+                </div>
             </div>
-          </div>
         </div>
         <div class="dialog-buttons">
-          <a class="waves-effect waves-light btn" id="butAddCity">Add</a>
-          <a class="waves-effect waves-light btn" id="butAddCancel">Cancel</a>
+            <a class="waves-effect waves-light btn" id="butAddCity">Add</a>
+            <a class="waves-effect waves-light btn" id="butAddCancel">Cancel</a>
         </div>
-      </div>
     </div>
-    <div class="loader">
-      <svg viewBox="0 0 32 32" width="32" height="32">
+</div>
+<div class="loader">
+    <svg viewBox="0 0 32 32" width="32" height="32">
         <circle id="spinner" cx="16" cy="16" r="14" fill="none"></circle>
-      </svg>
-    </div>
+    </svg>
+</div>
 
-      <div class="fixed-action-btn vertical">
-        <a class="btn-floating btn-large btn">
-          <i class="material-icons">menu</i>
-        </a>
-        <ul>
-          <li><a class="btn-floating blue darken-1 disabled" id="signOut"><i class="material-icons">exit_to_app</i></a></li>
-          <li><a class="btn-floating green" id="butAddMenu"><i class="material-icons">location_city</i></a></li>
-          <li><a class="btn-floating red google_signing"><i class="material-icons">person</i></a></li>
-        </ul>
-      </div>
-
-
-
+<div class="fixed-action-btn vertical">
+    <a class="btn-floating btn-large btn">
+        <i class="material-icons">menu</i>
+    </a>
+    <ul>
+        <li><a class="btn-floating blue darken-1 disabled" id="signOut"><i class="material-icons">exit_to_app</i></a>
+        </li>
+        <li><a class="btn-floating green" id="butAddMenu"><i class="material-icons">add</i></a></li>
+        <li><a class="btn-floating red google_signing"><i class="material-icons">person</i></a></li>
+    </ul>
+</div>
 
 
-      <!-- Toast msg -->
-      <div class="toast__msg"></div>
-    </div>
+<!-- Toast msg -->
+<div class="toast__msg"></div>
+</div>
 
-     <script
-    src="https://code.jquery.com/jquery-3.2.1.min.js"
-    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-    crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
-    <!-- Uncomment the line below when ready to test with fake data -->
-    <script src="scripts/init.js" async></script>
-        <script src="scripts/offline.js" async></script>
-    <script src="scripts/toast.js" async></script>
+<script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.1/js/materialize.min.js"></script>
+<!-- Uncomment the line below when ready to test with fake data -->
+<script src="scripts/init.js" async></script>
+<script src="scripts/offline.js" async></script>
+<script src="scripts/toast.js" async></script>
 
-    <script src="scripts/app.js" async></script>
-    <script src="scripts/clothing.js" async></script>
+<script src="scripts/app.js" async></script>
+<script src="scripts/clothing.js" async></script>
 
-    <!--<script src="scripts/push.js" async></script>-->
-    <script src="scripts/firebase.js" async></script>
-  </body>
+<!--<script src="scripts/push.js" async></script>-->
+<script src="scripts/firebase.js" async></script>
+</body>
 </html>

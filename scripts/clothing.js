@@ -67,12 +67,17 @@ app.setWarmLevel = function (warmLevel) {
 
 app.LevelChosen = function () {
     var feedback = document.querySelector('.feedback');
-    $(feedback).show();
+    if (app.afterNoon()){
+        $(feedback).show();
+    }
     var edit = document.getElementById('editLevel');
     $(edit).show();
     var levels = document.querySelector('.levels');
     $(levels).hide();
     if (localStorage.feeling == 'true'){
+        if (!app.afterNoon()){
+            return;
+        }
         app.feelingChosen(false);
         return;
     }
@@ -101,6 +106,15 @@ document.getElementById('editFeedback').addEventListener('click', function () {
 document.getElementById('editLevel').addEventListener('click', function () {
     app.reChooseLevel();
 });
+
+app.afterNoon = function() {
+    var date = new Date();
+    var hours = date.getHours();
+    if (hours >= 16){
+        return true;
+    }
+    return false;
+}
 
 app.feelingChosen = function (withToast) {
     if (withToast){
@@ -136,6 +150,9 @@ for (var j = 0; j < feelingBtn.length; j++) {
         };
         localStorage.feeling = true;
         sendDataToFeelingServer(data);
+        if (!app.afterNoon()){
+            return;
+        }
         app.feelingChosen(true);
         }
     )
