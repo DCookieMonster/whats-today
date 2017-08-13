@@ -66,30 +66,52 @@ app.setWarmLevel = function (warmLevel) {
 };
 
 app.LevelChosen = function () {
+    var feedback = document.querySelector('.feedback');
+    $(feedback).show();
+    var edit = document.getElementById('editLevel');
+    $(edit).show();
+    var levels = document.querySelector('.levels');
+    $(levels).hide();
     if (localStorage.feeling == 'true'){
-        var edit = document.getElementById('editLevel');
-        edit.classList.remove('disabled');
+        app.feelingChosen(false);
         return;
     }
-    var feedback = document.querySelector('.feedback');
-    $(feedback).show();
 };
 
-app.LevelUnChosen = function () {
-    var feedback = document.querySelector('.feedback');
+app.reFeedback = function () {
+    var edit = document.getElementById('editFeedback');
+    $(edit).hide();
+    var feedback = document.querySelector('.feedback-btns');
     $(feedback).show();
+    var feedbackSubtitle = document.querySelector('.feedback-subtitle');
+    $(feedbackSubtitle).show();
 };
 
-document.getElementById('editLevel').addEventListener('click', function () {
-    app.LevelUnChosen();
+app.reChooseLevel = function () {
+    var edit = document.getElementById('editLevel');
+    $(edit).hide();
+    var levels = document.querySelector('.levels');
+    $(levels).show();
+};
+
+document.getElementById('editFeedback').addEventListener('click', function () {
+    app.reFeedback();
 });
 
-app.feelingChosen = function () {
-    toast('Thank You For Your Feedback');
-    var edit = document.getElementById('editLevel');
-    edit.classList.remove('disabled');
-    var feedback = document.querySelector('.feedback');
+document.getElementById('editLevel').addEventListener('click', function () {
+    app.reChooseLevel();
+});
+
+app.feelingChosen = function (withToast) {
+    if (withToast){
+        toast('Thank You For Your Feedback');
+    }
+    var edit = document.getElementById('editFeedback');
+    $(edit).show();
+    var feedback = document.querySelector('.feedback-btns');
     $(feedback).hide();
+    var feedbackSubtitle = document.querySelector('.feedback-subtitle');
+    $(feedbackSubtitle).hide();
 };
 
 function sendDataToFeelingServer(data) {
@@ -114,7 +136,7 @@ for (var j = 0; j < feelingBtn.length; j++) {
         };
         localStorage.feeling = true;
         sendDataToFeelingServer(data);
-        app.feelingChosen();
+        app.feelingChosen(true);
         }
     )
 }

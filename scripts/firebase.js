@@ -24,8 +24,6 @@ signOutElement.addEventListener('click', function () {
     $(clothing).hide();
     var sign_in = document.querySelector('.sign-in');
     $(sign_in).show();
-    var edit = document.getElementById('editLevel');
-    edit.className = " disabled";
     var signOut =  document.getElementById('signOut');
     signOut.className = " disabled";
     var card = document.querySelector('.recommended-card');

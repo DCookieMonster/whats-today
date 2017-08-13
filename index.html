@@ -31,7 +31,7 @@
     <header class="header">
       <h1 class="header__title">What's Today</h1>
       <button id="butRefresh" class="headerButton" aria-label="Refresh"></button>
-      <button id="butAdd" class="headerButton" aria-label="Add"></button>
+      <button id="butAdd" class="headerButton" aria-label="Add"><i class="material-icons">location_city</i></button>
     </header>
     <main class="main">
       <div class="card cardTemplate weather-forecast" hidden>
@@ -160,10 +160,12 @@
       </div>
 
       <div class="card feedback">
-        <div class="row" style="padding-bottom: 2%">
+        <div class="row">
           <div class="col s12 m12">
-            <h5 style="font-size: 1.24em" class="feedback-header">Learn For Next Time</h5>
-            <p style="font-size: 1.1em">How do you feel with what you wear today?</p>
+            <h5 style="font-size: 1.24em" class="feedback-header">Learn for next time <i class="material-icons right btn-hidden expand-btn" id="editFeedback">expand_more
+            </i>
+            </h5>
+            <p style="font-size: 1.1em" class="feedback-subtitle">How do you feel with what you wear today?</p>
           </div>
         </div>
         <div class="row feedback-btns">
@@ -178,10 +180,11 @@
       <div class="card choose-clothing">
         <div class="row" style="padding-bottom: 2%">
           <div class="col s12 m12">
-            <h5 style="font-size: 1.24em" class="wearing-header">What are you wearing today?</h5>
+            <h5 style="font-size: 1.24em" class="wearing-header">What are you wearing today? <i class="material-icons right btn-hidden expand-btn" id="editLevel">expand_more
+            </i></h5>
           </div>
         </div>
-          <div class="row">
+          <div class="row levels">
             <div class="col s3 m3">
               <img class="center cloth" width="100%" src="images/warm_levels/light.png">
             </div>
@@ -222,7 +225,7 @@
           <div class="row">
             <div class="input-field col s12">
               <input type="text" name="selectCityToAdd" id='selectCityToAdd'>
-              <label for="selectCityToAdd">Add New City</label>
+              <label for="selectCityToAdd">Change City</label>
             </div>
           </div>
         </div>
@@ -243,9 +246,8 @@
           <i class="material-icons">menu</i>
         </a>
         <ul>
-          <li><a class="btn-floating green disabled" id="editLevel"><i class="material-icons">edit</i></a></li>
-          <li><a class="btn-floating yellow darken-1 disabled" id="signOut"><i class="material-icons">exit_to_app</i></a></li>
-          <li><a class="btn-floating blue" id="butAddMenu"><i class="material-icons">add</i></a></li>
+          <li><a class="btn-floating blue darken-1 disabled" id="signOut"><i class="material-icons">exit_to_app</i></a></li>
+          <li><a class="btn-floating green" id="butAddMenu"><i class="material-icons">location_city</i></a></li>
           <li><a class="btn-floating red google_signing"><i class="material-icons">person</i></a></li>
         </ul>
       </div>

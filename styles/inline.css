@@ -96,8 +96,8 @@ body {
     cursor: pointer; }
   .header #butRefresh {
     background: url(../images/ic_refresh_white_24px.svg) center center no-repeat; }
-  .header #butAdd {
-    background: url(../images/ic_add_white_24px.svg) center center no-repeat; }
+  /*.header #butAdd {*/
+    /*background: url(../images/ic_add_white_24px.svg) center center no-repeat; }*/
 
 .header__title {
   font-weight: 400;
@@ -522,6 +522,14 @@ body {
   display: none;
 }
 
+#editFeedback{
+  display: none;
+}
+
+.expand-btn{
+  cursor: pointer;
+}
+
 .recommended-img .icon.light {
   background-image: url("../images/warm_levels/light.png"); }
 .recommended-img .icon.mid-light {
@@ -542,3 +550,7 @@ body {
 .recommended-card .recommended-place:before {
   content: "Where: ";
   color: #888; }
+
+.row{
+  margin-bottom: 5px;
+}
