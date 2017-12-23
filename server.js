@@ -1,22 +1,25 @@
 'use strict';
-var express = require('express');
-var app = express();
-var http = require('http');
-var request = require("request");
+const express = require('express');
+const app = express();
+const http = require('http');
+const request = require("request");
+const debug = require('debug')('development');
+const name = 'whats-today';
+debug('booting %s', name);
 /* GET users listing. */
-var bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 Date.prototype.yyyymmdd = function() {
-    var mm = this.getMonth() + 1; // getMonth() is zero-based
-    var dd = this.getDate();
+    const mm = this.getMonth() + 1; // getMonth() is zero-based
+    const dd = this.getDate();
 
     return [this.getFullYear(),
-        (mm>9 ? '' : '0') + mm,
-        (dd>9 ? '' : '0') + dd
+        (mm > 9 ? '' : '0') + mm,
+        (dd > 9 ? '' : '0') + dd
     ].join('');
 };
 
-var gcm = require('node-gcm');
-var admin = require("firebase-admin");
+const gcm = require('node-gcm');
+const admin = require("firebase-admin");
 
 app.listen(process.env.PORT || 3000, function() {
     console.log('Local Server : http://localhost:3000');
@@ -26,17 +29,25 @@ app.listen(process.env.PORT || 3000, function() {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-var serviceAccount = require("./keys/serviceAccountKey.json");
+const serviceAccount = require("./keys/serviceAccountKey.json");
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://whats-today-pwa.firebaseio.com"
 });
 
+
+// const admin = require('firebase-admin');
+// const functions = require('firebase-functions');
+
+// admin.initializeApp(functions.config().firebase);
+
+
 // As an admin, the app has access to read and write all data, regardless of Security Rules
-var db = admin.database();
-var cloth_ref = db.ref("clothing");
-var ref = db.ref("accounts");
+// var db = admin.database();
+const db = admin.firestore();
+const cloth_ref = db.collection("clothing");
+const users_db = db.collection("users");
 
 
 //To server static assests in root dir
@@ -50,123 +61,97 @@ app.use(function(req, res, next) {
 });
 
 //To server index.html page
-app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/index.html');
+app.get('/', function(req, res) {
+    res.sendFile(__dirname + '/index.html');
 });
 
 // ROUTES FOR OUR SIGN IN API
 // =============================================================================
-var signInRouter = express.Router();              // get an instance of the express Router
+const signInRouter = express.Router(); // get an instance of the express Router
 
-app.use('/sign_in',signInRouter);
+app.use('/sign_in', signInRouter);
 
-signInRouter.post('/', function (req, res) {
+signInRouter.post('/', function(req, res) {
     if (!req.body) {
         res.status(400);
     }
-    var data = {};
-    var email = req.body.email;
-    var usersRef = ref.child("users");
-    usersRef.orderByChild("email").equalTo(email).once("value", function(snapshot) {
-        var userData = snapshot.val();
-        if (userData){
-            for (var key in userData){
-                var user = key;
-            }
-            var date = new Date();
-            var cKey = user + '_' + date.yyyymmdd();
-            cloth_ref.child(cKey)
-                .once("value", function(snapshot) {
-                    var clothing = snapshot.val();
-                    data = {uid: user};
-                    if (clothing){
-                        data['clothing'] = clothing;
-                    }
-                    res.json(data);
-                    res.status(200)
-                });
+    const email = req.body.email;
+    users_db.where('email', '==', email).get().then(docs => {
+            // Document read successfully.
+        let data = [];
+        docs.forEach(doc => data.push({ data: doc.data(), uid: doc.id }));
+        if (data.length > 0 ){
+            res.status(200).send(data[0])
+        }else{
+            let newUser = users_db.doc();
+            newUser.set(req.body).then(() => {  // fetch the doc again and show its data
+                newUser.get().then(doc => {
+                    res.status(200).send({ data: doc.data(), uid: doc.id })
+                })
+            });
+        }
+});
 
-        }
-        else{
-            var newUser = usersRef.push(
-                req.body
-            );
-            data = {uid: newUser.key};
-            res.json(data);
-            res.status(200)
-        }
-    });
 
 
 });
 
-signInRouter.post('/id', function (req, res) {
+signInRouter.post('/id', function(req, res) {
     if (!req.body) {
         res.status(400);
     }
-    var data = {};
-    var id = req.body.uid;
-    var usersRef = ref.child("users");
-    usersRef.child(id)
-        .once('value', function(snapshot) {
-            var user_id = snapshot.key;
-            var date = new Date();
-            var cKey = id  + '_' + date.yyyymmdd();
-            cloth_ref.child(cKey)
-                .once('value', function (snapshot) {
-                    var clothing = snapshot.val();
-                    data = {uid: user_id};
-                    if (clothing){
-                        data['clothing'] = clothing;
-                    }
-                    res.json(data);
-                    res.status(200)
-                })
-                .catch(function () {
-                    data = {uid: user_id};
-                    res.json(data);
-                    res.status(200)
-                });
-        })
-        .catch(function () {
-            res.status(401);
+    const data = { user: {} };
+    const id = req.body.uid;
+    users_db.doc(id).get().then(doc =>{
+        if (doc.exists){
+            data['user'] = { data: doc.data(), uid: doc.id };
+            let date = new Date();
+            let cKey = doc.id + '_' + date.yyyymmdd();
+            cloth_ref.doc(cKey).get().then(clothingDoc =>{
+                if (clothingDoc.exists){
+                    data['clothing'] = clothingDoc.data();
+                }
+                console.log(data);
+                res.status(200).send(data)
+            });
+        }else{
+            res.status(401)
+        }
+    });
 
-        });
 });
 
 
 // ROUTES FOR OUR WARM LEVEL API
 // =============================================================================
-var router = express.Router();              // get an instance of the express Router
+const router = express.Router(); // get an instance of the express Router
 
-app.use('/warm_level',router);
+app.use('/warm_level', router);
 
-router.post('/', function (req, res) {
+router.post('/', function(req, res) {
     if (!req.body) {
         res.status(400);
     }
-    var date = new Date(req.body.time);
-    var key = req.body.uid  + '_' + date.yyyymmdd();
-
-    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
-        var clothingInfo = snapshot.val();
-        if (clothingInfo) {
-            var data = { warm_level: req.body.warm_level };
-            cloth_ref.child(key).update(data)
-        }
-        else{
-            var data = {
-                ID: key,
+    const date = new Date(req.body.time);
+    const key = req.body.uid + '_' + date.yyyymmdd();
+    cloth_ref.doc(key).get().then(clothingDoc =>{
+        if (clothingDoc.exists){
+            // update warm level
+            let data = { warm_level: req.body.warm_level };
+            cloth_ref.doc(key).update(data)
+        }else{
+            // set warm level
+            let data = {
+                id: key,
                 warm_level: req.body.warm_level,
                 user_id: req.body.uid,
                 temp: req.body.temp,
                 city: req.body.city,
                 created_at: date.getTime()
             };
-            cloth_ref.child(key).set(data)
+            cloth_ref.doc(key).set(data);
         }
-
-    })
+    });
 });
 
 
@@ -175,59 +160,52 @@ router.post('/feeling', function(req, res) {
     if (!req.body) {
         res.status(400);
     }
-    var date = new Date(req.body.time);
-    var key = req.body.uid  + '_' + date.yyyymmdd();
-
-    cloth_ref.orderByChild("ID").equalTo(key).once("value", function(snapshot) {
-        var clothingInfo = snapshot.val();
-        if (clothingInfo) {
-            var data = {
+    const date = new Date(req.body.time);
+    const key = req.body.uid + '_' + date.yyyymmdd();
+    cloth_ref.doc(key).get().then(clothingDoc =>{
+        if (clothingDoc.exists) {
+            // update feeling on what the user wear today
+            let data = {
                 feeling: req.body.feeling,
                 feedbackTime: req.body.time
             };
-            cloth_ref.child(key).update(data)
+            cloth_ref.doc(key).update(data)
+        } else {
+            res.status(400).send({error: 'wrong keys'})
         }
-        else{
-            res.json({error: 'wrong keys'});
-            res.status(400)
-        }
+    });
 
-    })});
+});
 
-router.get('/recommended', function (req, res) {
+router.get('/recommended', function(req, res) {
     if (!req.body) {
         res.status(400);
     }
-    var key = req.query.uid  + '_';
-    cloth_ref.orderByChild("user_id").equalTo(req.query.uid).on("value", function(snapshot) {
-        var clothingInfo = snapshot.val();
-        if (clothingInfo) {
-            for (var key in clothingInfo){
-                var clothing = clothingInfo[key];
-                if (!clothing.feeling || clothing.feeling == null){
-                    continue;
-                }
-                var date = new Date();
-                var created_at = new Date(clothing.created_at);
-                if (created_at.yyyymmdd() == date.yyyymmdd()){
-                    continue;
-                }
-                var temp = parseInt(req.query.temp);
-                if (clothing.temp < temp + 4 && clothing.temp > temp - 4){
-                    res.json({recommended: clothing});
-                    res.status(200);
-                    return;
-                    break;
-                }
-            }
-            res.json({recommended: {} });
-            res.status(200)
-            return;
-        }
-        else {
-            res.json({recommended: {} });
-            res.status(200)
-        }
+    const user_id = req.query.uid;
+    cloth_ref.where('user_id', '==', user_id).get().then(clothingDocs =>{
+       if (clothingDocs.exists) {
+           let data = [];
+           clothingDocs.forEach(doc => data.push({data: doc.data(), uid: doc.id}));
+           if (data.length > 0) {
+               for (let key in data) {
+                   let clothing = data[key];
+                   if (!clothing.feeling || clothing.feeling === null) {
+                       continue;
+                   }
+                   let date = new Date();
+                   let created_at = new Date(clothing.created_at);
+                   if (created_at.yyyymmdd() === date.yyyymmdd()) {
+                       continue;
+                   }
+                   let temp = parseInt(req.query.temp);
+                   if (clothing.temp < temp + 4 && clothing.temp > temp - 4) {
+                       res.status(200).send({recommended: clothing});
+                       break;
+                   }
+               }
+           }
+       }
+        res.status(200).send({ recommended: {} })
     });
 
 });
@@ -235,39 +213,35 @@ router.get('/recommended', function (req, res) {
 
 
 //To receive push request from client
-app.post('/send_notification', function (req, res) {
-  if (!req.body) {
-    res.status(400);
-  }
+app.post('/send_notification', function(req, res) {
+    if (!req.body) {
+        res.status(400);
+    }
 
-   // Prepare a message to be sent
-  var message = new gcm.Message();
+    // Prepare a message to be sent
+    var message = new gcm.Message();
 
 
-  var temp = req.body.endpoint.split('/');
-  var regTokens = [temp[temp.length - 1]];
+    var temp = req.body.endpoint.split('/');
+    var regTokens = [temp[temp.length - 1]];
 
-  var sender = new gcm.Sender('AAAARLoMuOE:APA91bGDcR4xkpwDFI7_qdb7KgUHu3R3Q27R0g5gnQRLS4htBQS_rtl9MKB1KPbowTJ6-u6m7RM0ASlCeSNmVNk4679Ibh8OEAB54lzHmFVY7b4pCjVwpjbuTu9wwhNI5l0GAdDnFcss'); //Replace with your GCM API key
+    var sender = new gcm.Sender('AAAARLoMuOE:APA91bGDcR4xkpwDFI7_qdb7KgUHu3R3Q27R0g5gnQRLS4htBQS_rtl9MKB1KPbowTJ6-u6m7RM0ASlCeSNmVNk4679Ibh8OEAB54lzHmFVY7b4pCjVwpjbuTu9wwhNI5l0GAdDnFcss'); //Replace with your GCM API key
     var usersRef = ref.child("users_tokens");
 
-  // Now the sender can be used to send messages
-  sender.send(message, { registrationTokens: regTokens }, function (error, response) {
-  	if (error) {
-      console.error(error);
-      res.status(400);
-    }
-  	else {
-      console.log('sent');
-      console.log(response);
-        usersRef.set(
-            {
+    // Now the sender can be used to send messages
+    sender.send(message, { registrationTokens: regTokens }, function(error, response) {
+        if (error) {
+            console.error(error);
+            res.status(400);
+        } else {
+            console.log('sent');
+            console.log(response);
+            usersRef.set({
                 token: regTokens,
                 created_at: new Date()
-            }
-        );
-      res.status(200);
+            });
+            res.status(200);
 
-    }
-  });
+        }
+    });
 });
-

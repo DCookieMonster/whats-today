@@ -116,7 +116,7 @@ app.silentSignIn = function () {
                 'Content-Type': 'application/json'
             },
             success: function (response) {
-                localStorage.uid = response.uid;
+                localStorage.uid = response.user.uid;
                 if (response.clothing){
                     app.setWarmLevel(response.clothing.warm_level);
                     localStorage.clothing = JSON.stringify(response.clothing);
@@ -125,7 +125,6 @@ app.silentSignIn = function () {
             },
             error: function (response) {
                 app.failedLogin();
-
             }
         });
     }
