@@ -154,6 +154,23 @@
             var nextDay = nextDays[i];
             var daily = data.channel.item.forecast[i];
             if (daily && nextDay) {
+                if (i == 0){
+                    let nextDayTempInfo = daily;
+                    var minTemp = parseFloat(nextDayTempInfo.low);
+                    var maxTemp = parseFloat(nextDayTempInfo.high);
+                    var avgTemp = (maxTemp + minTemp) / 2;
+                    var diffTemp = Math.floor(current.temp - avgTemp);
+                    var tempText = ' Difference';
+                    if (diffTemp > 0) {
+                        tempText = ' Colder';
+                    } else if (diffTemp < 0) {
+                        tempText = ' Wormer';
+                    }
+                    console.log(avgTemp);
+                    console.log(current.temp);
+                    card.querySelector('.next-day .next-day-diff').textContent = Math.abs(diffTemp);
+                    card.querySelector('.next-day .next-day-info').textContent = tempText + " Then Today";
+                }
                 nextDay.querySelector('.date').textContent =
                     app.daysOfWeek[(i + today) % 7];
                 nextDay.querySelector('.icon').classList.add(app.getIconClass(daily.code));

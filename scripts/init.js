@@ -22,7 +22,6 @@ window.app = {
     daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
 };
 
-
 if (!localStorage.uid || localStorage.uid == '') {
     var sign_in = document.querySelector('.sign-in');
     $(sign_in).hide();

@@ -288,6 +288,9 @@ body {
   .weather-forecast .yesterday:before {
     content: "Today Is: ";
     color: #888; }
+.weather-forecast .next-day:before {
+  content: "Tomorrow Will Be: ";
+  color: #888; }
   .weather-forecast .current .wind:before {
     content: "Wind: ";
     color: #888; }
@@ -414,6 +417,10 @@ body {
 .description .yesterday{
      font-size: 1.4em;
     font-weight: bold;
+}
+.description .next-day{
+  font-size: 1.4em;
+  font-weight: bold;
 }
 
 .fab {

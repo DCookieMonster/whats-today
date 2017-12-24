@@ -36,19 +36,9 @@ admin.initializeApp({
     databaseURL: "https://whats-today-pwa.firebaseio.com"
 });
 
-
-// const admin = require('firebase-admin');
-// const functions = require('firebase-functions');
-
-// admin.initializeApp(functions.config().firebase);
-
-
-// As an admin, the app has access to read and write all data, regardless of Security Rules
-// var db = admin.database();
 const db = admin.firestore();
 const cloth_ref = db.collection("clothing");
 const users_db = db.collection("users");
-
 
 //To server static assests in root dir
 app.use(express.static(__dirname));
@@ -77,22 +67,20 @@ signInRouter.post('/', function(req, res) {
     }
     const email = req.body.email;
     users_db.where('email', '==', email).get().then(docs => {
-            // Document read successfully.
+        // Document read successfully.
         let data = [];
         docs.forEach(doc => data.push({ data: doc.data(), uid: doc.id }));
-        if (data.length > 0 ){
+        if (data.length > 0) {
             res.status(200).send(data[0])
-        }else{
+        } else {
             let newUser = users_db.doc();
-            newUser.set(req.body).then(() => {  // fetch the doc again and show its data
+            newUser.set(req.body).then(() => { // fetch the doc again and show its data
                 newUser.get().then(doc => {
                     res.status(200).send({ data: doc.data(), uid: doc.id })
                 })
             });
         }
-});
-
-
+    });
 
 });
 
@@ -102,25 +90,24 @@ signInRouter.post('/id', function(req, res) {
     }
     const data = { user: {} };
     const id = req.body.uid;
-    users_db.doc(id).get().then(doc =>{
-        if (doc.exists){
+    users_db.doc(id).get().then(doc => {
+        if (doc.exists) {
             data['user'] = { data: doc.data(), uid: doc.id };
             let date = new Date();
             let cKey = doc.id + '_' + date.yyyymmdd();
-            cloth_ref.doc(cKey).get().then(clothingDoc =>{
-                if (clothingDoc.exists){
+            cloth_ref.doc(cKey).get().then(clothingDoc => {
+                if (clothingDoc.exists) {
                     data['clothing'] = clothingDoc.data();
                 }
                 console.log(data);
                 res.status(200).send(data)
             });
-        }else{
+        } else {
             res.status(401)
         }
     });
 
 });
-
 
 // ROUTES FOR OUR WARM LEVEL API
 // =============================================================================
@@ -134,12 +121,12 @@ router.post('/', function(req, res) {
     }
     const date = new Date(req.body.time);
     const key = req.body.uid + '_' + date.yyyymmdd();
-    cloth_ref.doc(key).get().then(clothingDoc =>{
-        if (clothingDoc.exists){
+    cloth_ref.doc(key).get().then(clothingDoc => {
+        if (clothingDoc.exists) {
             // update warm level
             let data = { warm_level: req.body.warm_level };
             cloth_ref.doc(key).update(data)
-        }else{
+        } else {
             // set warm level
             let data = {
                 id: key,
@@ -162,7 +149,7 @@ router.post('/feeling', function(req, res) {
     }
     const date = new Date(req.body.time);
     const key = req.body.uid + '_' + date.yyyymmdd();
-    cloth_ref.doc(key).get().then(clothingDoc =>{
+    cloth_ref.doc(key).get().then(clothingDoc => {
         if (clothingDoc.exists) {
             // update feeling on what the user wear today
             let data = {
@@ -171,7 +158,7 @@ router.post('/feeling', function(req, res) {
             };
             cloth_ref.doc(key).update(data)
         } else {
-            res.status(400).send({error: 'wrong keys'})
+            res.status(400).send({ error: 'wrong keys' })
         }
     });
 
@@ -182,35 +169,33 @@ router.get('/recommended', function(req, res) {
         res.status(400);
     }
     const user_id = req.query.uid;
-    cloth_ref.where('user_id', '==', user_id).get().then(clothingDocs =>{
-       if (clothingDocs.exists) {
-           let data = [];
-           clothingDocs.forEach(doc => data.push({data: doc.data(), uid: doc.id}));
-           if (data.length > 0) {
-               for (let key in data) {
-                   let clothing = data[key];
-                   if (!clothing.feeling || clothing.feeling === null) {
-                       continue;
-                   }
-                   let date = new Date();
-                   let created_at = new Date(clothing.created_at);
-                   if (created_at.yyyymmdd() === date.yyyymmdd()) {
-                       continue;
-                   }
-                   let temp = parseInt(req.query.temp);
-                   if (clothing.temp < temp + 4 && clothing.temp > temp - 4) {
-                       res.status(200).send({recommended: clothing});
-                       break;
-                   }
-               }
-           }
-       }
+    cloth_ref.where('user_id', '==', user_id).get().then(clothingDocs => {
+        if (clothingDocs.exists) {
+            let data = [];
+            clothingDocs.forEach(doc => data.push({ data: doc.data(), uid: doc.id }));
+            if (data.length > 0) {
+                for (let key in data) {
+                    let clothing = data[key];
+                    if (!clothing.feeling || clothing.feeling === null) {
+                        continue;
+                    }
+                    let date = new Date();
+                    let created_at = new Date(clothing.created_at);
+                    if (created_at.yyyymmdd() === date.yyyymmdd()) {
+                        continue;
+                    }
+                    let temp = parseInt(req.query.temp);
+                    if (clothing.temp < temp + 4 && clothing.temp > temp - 4) {
+                        res.status(200).send({ recommended: clothing });
+                        break;
+                    }
+                }
+            }
+        }
         res.status(200).send({ recommended: {} })
     });
 
 });
-
-
 
 //To receive push request from client
 app.post('/send_notification', function(req, res) {
