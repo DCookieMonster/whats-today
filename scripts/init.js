@@ -14,6 +14,7 @@ window.app = {
     selectedCities: {},
     spinner: document.querySelector('.loader'),
     cardTemplate: document.querySelector('.cardTemplate'),
+    futureCardTemplate: document.querySelector('.future-forecast'),
     container: document.querySelector('.main'),
     addDialog: document.querySelector('.dialog-container'),
     baseServerUrl: 'https://whats-today.herokuapp.com', // 'http://localhost:3000', //

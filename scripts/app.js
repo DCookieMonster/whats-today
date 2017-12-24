@@ -13,7 +13,7 @@
 // limitations under the License.
 
 
-(function () {
+(function() {
     'use strict';
 
     var app = window.app || {};
@@ -24,22 +24,22 @@
      *
      ****************************************************************************/
 
-    document.getElementById('butRefresh').addEventListener('click', function () {
+    document.getElementById('butRefresh').addEventListener('click', function() {
         // Refresh all of the forecasts
         app.updateForecasts();
     });
 
-    document.getElementById('butAdd').addEventListener('click', function () {
+    document.getElementById('butAdd').addEventListener('click', function() {
         // Open/show the add new city dialog
         app.toggleAddDialog(true);
     });
 
-    document.getElementById('butAddMenu').addEventListener('click', function () {
+    document.getElementById('butAddMenu').addEventListener('click', function() {
         // Open/show the add new city dialog
         app.toggleAddDialog(true);
     });
 
-    document.getElementById('butAddCity').addEventListener('click', function () {
+    document.getElementById('butAddCity').addEventListener('click', function() {
         // Add the newly selected city
         var selected = document.getElementById('selectCityToAdd');
         // var selected = select.options[select.selectedIndex];
@@ -57,10 +57,11 @@
 
     function remove() {
         $(app.visibleCards[app.city.toLowerCase()]).remove();
+        $(app.visibleCards[app.city.toLowerCase() + 'future']).remove();
         app.visibleCards = [];
     }
 
-    document.getElementById('butAddCancel').addEventListener('click', function () {
+    document.getElementById('butAddCancel').addEventListener('click', function() {
         // Close the add new city dialog
         app.toggleAddDialog(false);
     });
@@ -73,7 +74,7 @@
      ****************************************************************************/
 
     // Toggles the visibility of the add new city dialog.
-    app.toggleAddDialog = function (visible) {
+    app.toggleAddDialog = function(visible) {
         if (visible) {
             app.addDialog.classList.add('dialog-container--visible');
         } else {
@@ -83,7 +84,7 @@
 
     // Updates a weather card with the latest weather forecast. If the card
     // doesn't already exist, it's cloned from the template.
-    app.updateForecastCard = function (data) {
+    app.updateForecastCard = function(data) {
 
         var dataLastUpdated = new Date(data.created);
         var sunrise = data.channel.astronomy.sunrise;
@@ -93,6 +94,7 @@
         var wind = data.channel.wind;
 
         var card = app.visibleCards[data.key.toLowerCase()];
+        var futureCard = app.visibleCards[data.key.toLowerCase() + 'future']
         var loc = data.channel.location;
         var city = '';
         var country = '';
@@ -107,7 +109,7 @@
             if (data.key == '') {
                 card.querySelector('.butDelete').textContent = 'gps_fixed';
             } else {
-                card.querySelector('.butDelete').onclick = function () {
+                card.querySelector('.butDelete').onclick = function() {
                     app.deleteCity(this.parentElement.parentElement.parentElement.querySelector('.city-id').textContent);
                 };
                 card.querySelector('.butDelete').style.cursor = 'pointer';
@@ -123,7 +125,16 @@
             card.removeAttribute('hidden');
             app.container.appendChild(card);
             app.visibleCards[app.city.toLowerCase()] = card;
+            if (!futureCard) {
+                futureCard = app.futureCardTemplate.cloneNode(true);
+                futureCard.querySelector('.city-key').textContent = app.city + ', ' + country;
+                futureCard.querySelector('.city-id').textContent = card.querySelector('.city-id').textContent;
+                futureCard.removeAttribute('hidden');
+                app.container.appendChild(futureCard);
+                app.visibleCards[app.city.toLowerCase() + 'future'] = futureCard
+            }
         }
+
 
         // Verifies the data provide is newer than what's already visible
         // on the card, if it's not bail, if it is, continue and update the
@@ -138,7 +149,9 @@
             }
         }
         cardLastUpdatedElem.textContent = data.created;
-
+        if (card.classList.contains('future-forecast')) {
+            return;
+        }
         card.querySelector('.weather-description').textContent = current.text;
         card.querySelector('.date').textContent = current.date;
         card.querySelector('.current .icon').classList.add(app.getIconClass(current.code));
@@ -147,14 +160,14 @@
         app.temp = Math.round(current.temp);
         card.querySelector('.current .humidity').textContent =
             Math.round(humidity) + '%';
-        var nextDays = card.querySelectorAll('.future .oneday');
+        var nextDays = futureCard.querySelectorAll('.future .oneday');
         var today = new Date();
         today = today.getDay();
         for (var i = 0; i < 7; i++) {
             var nextDay = nextDays[i];
             var daily = data.channel.item.forecast[i];
             if (daily && nextDay) {
-                if (i == 0){
+                if (i == 0) {
                     let nextDayTempInfo = daily;
                     var minTemp = parseFloat(nextDayTempInfo.low);
                     var maxTemp = parseFloat(nextDayTempInfo.high);
@@ -166,8 +179,6 @@
                     } else if (diffTemp < 0) {
                         tempText = ' Wormer';
                     }
-                    console.log(avgTemp);
-                    console.log(current.temp);
                     card.querySelector('.next-day .next-day-diff').textContent = Math.abs(diffTemp);
                     card.querySelector('.next-day .next-day-info').textContent = tempText + " Then Today";
                 }
@@ -182,13 +193,14 @@
         }
         var latitude = data.channel.item.lat;
         var longitude = data.channel.item.long;
+        $(futureCard).show();
         app.getYesterdayWeatherByLocation(data.key, {
             'latitude': latitude,
             'longitude': longitude
         });
     };
 
-    app.updateYesterdayForecastCard = function (data) {
+    app.updateYesterdayForecastCard = function(data) {
         var dataLastUpdated = new Date(data.created);
         var card = app.visibleCards[data.key.toLowerCase()];
         var daily = data.daily;
@@ -220,7 +232,9 @@
         }
         card.querySelector('.yesterday .yesterday-diff').textContent = Math.abs(diffTemp);
         card.querySelector('.yesterday .yesterday-info').textContent = tempText + " From Yesterday";
-
+        if (!diffTemp || diffTemp === null) {
+            $('.yesterday').hide()
+        }
         if (app.isLoading) {
             app.spinner.setAttribute('hidden', true);
             app.container.removeAttribute('hidden');
@@ -243,7 +257,7 @@
      * request goes through, then the card gets updated a second time with the
      * freshest data.
      */
-    app.getForecast = function (key, label, loc = '') {
+    app.getForecast = function(key, label, loc = '') {
         label = key;
         var statement = "select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + label + "') and u='c'";
         // var statement = "select * from weather.forecast where u='c' and woeid=" + key ;
@@ -261,7 +275,7 @@
              * data. If the service worker has the data, then display the cached
              * data while the app fetches the latest data.
              */
-            caches.match(url).then(function (response) {
+            caches.match(url).then(function(response) {
                 if (response) {
                     response.json().then(function updateFromCache(json) {
                         var results = json.query.results;
@@ -275,7 +289,7 @@
         }
         // Fetch the latest data.
         var request = new XMLHttpRequest();
-        request.onreadystatechange = function () {
+        request.onreadystatechange = function() {
             if (request.readyState === XMLHttpRequest.DONE) {
                 if (request.status === 200) {
                     var response = JSON.parse(request.response);
@@ -294,7 +308,7 @@
         request.send();
     };
 
-    app.getYesterdayWeatherByLocation = function (key, loc = '') {
+    app.getYesterdayWeatherByLocation = function(key, loc = '') {
         if (loc == '') {
             return;
         }
@@ -306,14 +320,14 @@
         var longitude = loc['longitude']
         var latitude = loc['latitude']
         var url = baseUrl + latitude + ',' + longitude + ',' + yesterday + extraParams
-        // TODO add cache logic here
+            // TODO add cache logic here
         if ('caches' in window) {
             /*
              * Check if the service worker has already cached this city's weather
              * data. If the service worker has the data, then display the cached
              * data while the app fetches the latest data.
              */
-            caches.match(url).then(function (response) {
+            caches.match(url).then(function(response) {
                 if (response) {
                     response.json().then(function updateFromCache(json) {
                         var results = json.query.results;
@@ -333,17 +347,20 @@
                 'Access-Control-Allow-Credentials': true,
                 'Access-Control-Allow-Headers': true
             },
-            success: function (response) {
+            success: function(response) {
                 var results = response;
                 results.key = key;
                 results.created = new Date();
                 app.updateYesterdayForecastCard(results);
+            },
+            error: function(response) {
+                $('.yesterday').hide();
             }
         });
     };
 
     // Iterate all of the cards and attempt to get the latest forecast data
-    app.updateForecasts = function () {
+    app.updateForecasts = function() {
         if (!app.isLoading) {
             app.spinner.removeAttribute('hidden');
             app.isLoading = true;
@@ -352,7 +369,7 @@
         if (keys.length == 0) {
             app.getGPSForcasts()
         }
-        keys.forEach(function (key) {
+        keys.forEach(function(key) {
             app.getForecast(key);
         });
         if (keys.length == 0) {
@@ -364,8 +381,8 @@
         }
     };
 
-    app.getGPSForcasts = function () {
-        navigator.geolocation.getCurrentPosition(function (location) {
+    app.getGPSForcasts = function() {
+        navigator.geolocation.getCurrentPosition(function(location) {
             app.getForecast('', '', {
                 'latitude': location.coords.latitude,
                 'longitude': location.coords.longitude
@@ -373,9 +390,9 @@
         });
     }
 
-    app.deleteCity = function (city) {
+    app.deleteCity = function(city) {
         app.selectedCities = null;
-        if (app.visibleCards && app.visibleCards != null){
+        if (app.visibleCards && app.visibleCards != null) {
             for (var member in app.visibleCards) delete app.visibleCards[member];
         }
         var cards = document.getElementsByClassName('card');
@@ -395,12 +412,12 @@
 
     // TODO add saveSelectedCities function here
     // Save list of cities to localStorage.
-    app.saveSelectedCities = function () {
+    app.saveSelectedCities = function() {
         var selectedCities = JSON.stringify(app.selectedCities);
         localStorage.selectedCities = selectedCities;
     };
 
-    app.getIconClass = function (weatherCode) {
+    app.getIconClass = function(weatherCode) {
         // Weather codes: https://developer.yahoo.com/weather/documentation.html#codes
         weatherCode = parseInt(weatherCode);
         switch (weatherCode) {
@@ -549,7 +566,7 @@
         //   app.getForecast(city.key, city.label);
         // });
     } else {
-        navigator.geolocation.getCurrentPosition(function (location) {
+        navigator.geolocation.getCurrentPosition(function(location) {
             app.getForecast('', '', {
                 'latitude': location.coords.latitude,
                 'longitude': location.coords.longitude
@@ -571,11 +588,11 @@
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker
             .register('./serviceWorker.js')
-            .then(function () {
+            .then(function() {
                 console.log('Service Worker Registered');
             });
         //Listen postMessage when `background sync` is triggered
-        navigator.serviceWorker.addEventListener('message', function (event) {
+        navigator.serviceWorker.addEventListener('message', function(event) {
             console.info('From background sync: ', event.data);
             fetchGitUserInfo(localStorage.getItem('request'), true);
             bgSyncElement.classList.remove('hide'); //Once sync event fires, show register toggle button
@@ -584,5 +601,3 @@
     }
 
 })();
-
-
