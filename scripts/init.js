@@ -17,7 +17,7 @@ window.app = {
     futureCardTemplate: document.querySelector('.future-forecast'),
     container: document.querySelector('.main'),
     addDialog: document.querySelector('.dialog-container'),
-    baseServerUrl: 'https://whats-today.herokuapp.com', // 'http://localhost:3000', //
+    baseServerUrl: 'http://localhost:3000', //'https://whats-today.herokuapp.com', //
     city: '',
     temp: '',
     daysOfWeek: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']

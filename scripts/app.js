@@ -160,20 +160,25 @@
         app.temp = Math.round(current.temp);
         card.querySelector('.current .humidity').textContent =
             Math.round(humidity) + '%';
-        var nextDays = futureCard.querySelectorAll('.future .oneday');
-        var today = new Date();
+        const nextDays = futureCard.querySelectorAll('.future .oneday');
+        let today = new Date();
         today = today.getDay();
-        for (var i = 0; i < 7; i++) {
-            var nextDay = nextDays[i];
-            var daily = data.channel.item.forecast[i];
+        for (let i = 0; i < 7; i++) {
+            const nextDay = nextDays[i];
+            const daily = data.channel.item.forecast[i + 1];
             if (daily && nextDay) {
-                if (i == 0) {
-                    let nextDayTempInfo = daily;
-                    var minTemp = parseFloat(nextDayTempInfo.low);
-                    var maxTemp = parseFloat(nextDayTempInfo.high);
-                    var avgTemp = (maxTemp + minTemp) / 2;
-                    var diffTemp = Math.floor(current.temp - avgTemp);
-                    var tempText = ' Difference';
+                if (i === 0) {
+                    const nextDayTempInfo = daily;
+                    const todayTempInfo = data.channel.item.forecast[0];
+                    let nextDayMinTemp = parseFloat(nextDayTempInfo.low);
+                    let nextDayMaxTemp = parseFloat(nextDayTempInfo.high);
+                    let todayMinTemp = parseFloat(todayTempInfo.low);
+                    let todayMaxTemp = parseFloat(todayTempInfo.high);
+                    let nextDayAvgTemp = (nextDayMinTemp + nextDayMaxTemp) / 2;
+                    let todayAvgTemp = (todayMinTemp + todayMaxTemp) / 2;
+                    card.querySelector('.current .temperature .avg').textContent = todayAvgTemp;
+                    let diffTemp = Math.floor(todayAvgTemp - nextDayAvgTemp);
+                    let tempText = ' Difference';
                     if (diffTemp > 0) {
                         tempText = ' Colder';
                     } else if (diffTemp < 0) {
@@ -191,8 +196,8 @@
                     Math.round(daily.low);
             }
         }
-        var latitude = data.channel.item.lat;
-        var longitude = data.channel.item.long;
+        const latitude = data.channel.item.lat;
+        const longitude = data.channel.item.long;
         $(futureCard).show();
         app.getYesterdayWeatherByLocation(data.key, {
             'latitude': latitude,
@@ -201,15 +206,15 @@
     };
 
     app.updateYesterdayForecastCard = function(data) {
-        var dataLastUpdated = new Date(data.created);
-        var card = app.visibleCards[data.key.toLowerCase()];
-        var daily = data.daily;
-        var dailyData = daily.data;
+        const dataLastUpdated = new Date(data.created);
+        const card = app.visibleCards[data.key.toLowerCase()];
+        const daily = data.daily;
+        const dailyData = daily.data;
         // Verifies the data provide is newer than what's already visible
         // on the card, if it's not bail, if it is, continue and update the
         // time saved in the card
-        var cardLastUpdatedElem = card.querySelector('.card-last-updated');
-        var cardLastUpdated = cardLastUpdatedElem.textContent;
+        const cardLastUpdatedElem = card.querySelector('.card-last-updated');
+        let cardLastUpdated = cardLastUpdatedElem.textContent;
         if (cardLastUpdated) {
             cardLastUpdated = new Date(cardLastUpdated);
             // Bail if the card has more recent data then the data
@@ -218,13 +223,13 @@
             }
         }
         cardLastUpdatedElem.textContent = data.created;
-        var currentTemp = parseInt(card.querySelector('.current .temperature .value').textContent);
-        var yesterdayTempInfo = dailyData[0];
-        var minTemp = yesterdayTempInfo.apparentTemperatureMin;
-        var maxTemp = yesterdayTempInfo.apparentTemperatureMax;
-        var avgTemp = (maxTemp + minTemp) / 2;
-        var diffTemp = Math.floor(currentTemp - avgTemp);
-        var tempText = ' Difference';
+        const avgCurrentTemp = parseFloat(card.querySelector('.current .temperature .avg').textContent);
+        const yesterdayTempInfo = dailyData[0];
+        const minTemp = yesterdayTempInfo.apparentTemperatureMin;
+        const maxTemp = yesterdayTempInfo.apparentTemperatureMax;
+        const avgTemp = (maxTemp + minTemp) / 2;
+        const diffTemp = Math.floor(avgCurrentTemp - avgTemp);
+        let tempText = ' Difference';
         if (diffTemp > 0) {
             tempText = ' Colder';
         } else if (diffTemp < 0) {
