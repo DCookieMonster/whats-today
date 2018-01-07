@@ -35,6 +35,7 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://whats-today-pwa.firebaseio.com"
 });
+const GCM_API_KEY = 'AAAARLoMuOE:APA91bGDcR4xkpwDFI7_qdb7KgUHu3R3Q27R0g5gnQRLS4htBQS_rtl9MKB1KPbowTJ6-u6m7RM0ASlCeSNmVNk4679Ibh8OEAB54lzHmFVY7b4pCjVwpjbuTu9wwhNI5l0GAdDnFcss';
 
 const db = admin.firestore();
 const cloth_ref = db.collection("clothing");
@@ -66,7 +67,8 @@ signInRouter.post('/', function(req, res) {
         res.status(400);
     }
     const email = req.body.email;
-    users_db.where('email', '==', email).get().then(docs => {
+    users_db.where('email', '==', email).get()
+        .then(docs => {
         // Document read successfully.
         let data = [];
         docs.forEach(doc => data.push({ data: doc.data(), uid: doc.id }));
@@ -80,7 +82,11 @@ signInRouter.post('/', function(req, res) {
                 })
             });
         }
-    });
+    })
+        .catch(err => {
+            console.log('Error getting documents', err);
+            res.status(400).send({})
+        });
 
 });
 
@@ -169,13 +175,16 @@ router.get('/recommended', function(req, res) {
         res.status(400);
     }
     const user_id = req.query.uid;
-    cloth_ref.where('user_id', '==', user_id).get().then(clothingDocs => {
-        if (clothingDocs.exists) {
+    cloth_ref.where('user_id', '==', user_id).get()
+        .then(clothingDocs => {
             let data = [];
-            clothingDocs.forEach(doc => data.push({ data: doc.data(), uid: doc.id }));
+            clothingDocs.forEach(doc => {
+                data.push({ data: doc.data(), uid: doc.id });
+                console.log(doc.id, '=>', doc.data());
+            });
             if (data.length > 0) {
                 for (let key in data) {
-                    let clothing = data[key];
+                    let clothing = data[key].data;
                     if (!clothing.feeling || clothing.feeling === null) {
                         continue;
                     }
@@ -191,42 +200,74 @@ router.get('/recommended', function(req, res) {
                     }
                 }
             }
-        }
-        res.status(200).send({ recommended: {} })
-    });
+            res.status(200).send({ recommended: {} })
+        })
+        .catch(err => {
+            console.log('Error getting documents', err);
+            res.status(200).send({ recommended: {} })
+        });
 
 });
 
 //To receive push request from client
-app.post('/send_notification', function(req, res) {
+app.post('/notification/subscribe', function(req, res) {
     if (!req.body) {
         res.status(400);
     }
+    const temp = req.body.subscription.endpoint.split('/');
+    const id = req.body.uid;
+    const regTokens = [temp[temp.length - 1]];
 
-    // Prepare a message to be sent
-    var message = new gcm.Message();
-
-
-    var temp = req.body.endpoint.split('/');
-    var regTokens = [temp[temp.length - 1]];
-
-    var sender = new gcm.Sender('AAAARLoMuOE:APA91bGDcR4xkpwDFI7_qdb7KgUHu3R3Q27R0g5gnQRLS4htBQS_rtl9MKB1KPbowTJ6-u6m7RM0ASlCeSNmVNk4679Ibh8OEAB54lzHmFVY7b4pCjVwpjbuTu9wwhNI5l0GAdDnFcss'); //Replace with your GCM API key
-    var usersRef = ref.child("users_tokens");
-
-    // Now the sender can be used to send messages
-    sender.send(message, { registrationTokens: regTokens }, function(error, response) {
-        if (error) {
-            console.error(error);
-            res.status(400);
-        } else {
-            console.log('sent');
-            console.log(response);
-            usersRef.set({
-                token: regTokens,
-                created_at: new Date()
-            });
-            res.status(200);
-
+    users_db.doc(id).get().then(doc => {
+        if (doc.exists) {
+            const data = {
+                push_token: req.body.subscription,
+            };
+            users_db.doc(id).update(data)
         }
     });
+    res.status(200);
+
+    // // Prepare a message to be sent
+    // const message = new gcm.Message({
+    //     collapseKey: 'demo',
+    //     priority: 'high',
+    //     contentAvailable: true,
+    //     delayWhileIdle: true,
+    //     timeToLive: 3,
+    //     restrictedPackageName: "somePackageName",
+    //     dryRun: true,
+    //     data: {
+    //         key1: 'message1',
+    //         key2: 'message2'
+    //     },
+    //     notification: {
+    //         title: "Hello, World",
+    //         icon: "ic_launcher",
+    //         body: "This is a notification that will be displayed if your app is in the background."
+    //     }
+    // });
+
+
+
+    // const sender = new gcm.Sender(GCM_API_KEY); //Replace with your GCM API key
+
+    // Now the sender can be used to send messages
+    // sender.send(message, { registrationTokens: regTokens }, function(error, response) {
+    //     if (error) {
+    //         console.error(error);
+    //         res.status(400);
+    //     } else {
+    //         users_db.doc(id).get().then(doc => {
+    //             if (doc.exists) {
+    //                 const data = {
+    //                     push_token: req.body.subscription,
+    //                 };
+    //                 users_db.doc(id).update(data)
+    //             }
+    //         });
+    //         res.status(200);
+    //
+    //     }
+    // });
 });

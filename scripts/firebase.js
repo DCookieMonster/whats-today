@@ -78,7 +78,8 @@ app.loginSuccess = function(user) {
     var googleButton = document.querySelector('.google_signing');
     if (user.photoURL.length > 1) {
         $(googleButton).empty();
-        googleButton.innerHTML = "<img src='" + user.photoURL + "' width='100%'>";
+        googleButton.innerHTML = '<a style="opacity: 1;"><i class="material-icons">person</i></a>';
+        // googleButton.innerHTML = "<a><img src='" + user.photoURL + "' width='10%' style='padding-top: 5px;'></a>";
     }
     var clothing = document.querySelector('.choose-clothing');
     $(clothing).show();
