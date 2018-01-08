@@ -209,6 +209,29 @@ router.get('/recommended', function(req, res) {
 
 });
 
+const userRouter = express.Router(); // get an instance of the express Router
+
+app.use('/users', userRouter);
+
+userRouter.get('/:user_id/history', function(req, res) {
+    if (!req.params) {
+        res.status(400);
+    }
+    const user_id = req.params.user_id;
+    cloth_ref.where('user_id', '==', user_id).get()
+        .then(clothingDocs => {
+            let data = [];
+            clothingDocs.forEach(doc => {
+                data.push(doc.data());
+            });
+            res.status(200).send({ history: data })
+        })
+        .catch(err => {
+            console.log('Error getting documents', err);
+            res.status(400).send({error: 'Error getting documents'})
+        });
+});
+
 //To receive push request from client
 app.post('/notification/subscribe', function(req, res) {
     if (!req.body) {

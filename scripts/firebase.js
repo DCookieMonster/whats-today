@@ -1,6 +1,6 @@
 // Initialize Firebase
-var app = window.app || {};
-var provider = new firebase.auth.GoogleAuthProvider();
+const app = window.app || {};
+const provider = new firebase.auth.GoogleAuthProvider();
 
 var googleSigninElement = document.querySelector('.google_signing');
 //Click event for subscribe push
@@ -10,24 +10,20 @@ googleSigninElement.addEventListener('click', function () {
 
 var googleSigninLogoElement = document.querySelector('.google-auth');
 //Click event for subscribe push
-googleSigninLogoElement.addEventListener('click', function () {
-    firebase.auth().signInWithRedirect(provider);
-});
+googleSigninLogoElement.addEventListener('click',firebaseSignIn);
 
-var signOutElement = document.getElementById('signOut');
+function firebaseSignIn() {
+    firebase.auth().signInWithRedirect(provider);
+}
+
+
+const signOutElement = document.getElementById('signOut');
 //Click event for subscribe push
 signOutElement.addEventListener('click', function () {
     localStorage.removeItem('uid');
     var googleButton = document.querySelector('.google_signing');
-    googleButton.innerHTML = '<i class="material-icons">person</i>';
-    var clothing = document.querySelector('.choose-clothing');
-    $(clothing).hide();
-    var sign_in = document.querySelector('.sign-in');
-    $(sign_in).show();
-    var signOut =  document.getElementById('signOut');
-    signOut.className = " disabled";
-    var card = document.querySelector('.recommended-card');
-    $(card).hide();
+    googleButton.innerHTML = '<a style="opacity: 1;"><i class="material-icons">person_outline</i></a>';
+    location.href = 'index.html'
 });
 
 
@@ -74,40 +70,41 @@ firebase.auth().getRedirectResult().then(function (result) {
     // ...
 });
 
-app.loginSuccess = function(user) {
-    var googleButton = document.querySelector('.google_signing');
+app.loginSuccess = function (user) {
+    const googleButton = document.querySelector('.google_signing');
     if (user.photoURL.length > 1) {
         $(googleButton).empty();
-        googleButton.innerHTML = '<a style="opacity: 1;"><i class="material-icons">person</i></a>';
+        googleButton.innerHTML = '<a style="opacity: 1;" href="profile.html"><i class="material-icons">person</i></a>';
         // googleButton.innerHTML = "<a><img src='" + user.photoURL + "' width='10%' style='padding-top: 5px;'></a>";
     }
-    var clothing = document.querySelector('.choose-clothing');
+    const clothing = document.querySelector('.choose-clothing');
     $(clothing).show();
-    var sign_in = document.querySelector('.sign-in');
+    const sign_in = document.querySelector('.sign-in');
     $(sign_in).hide();
-    var signOut =  document.getElementById('signOut');
+    const signOut = document.getElementById('signOut');
     signOut.classList.remove('disabled');
-
+    googleButton.removeEventListener('click',firebaseSignIn);
     app.recommendedClothing(localStorage.uid, app.temp);
 };
 
-app.failedLogin = function() {
+app.failedLogin = function () {
     var sign_in = document.querySelector('.sign-in');
     $(sign_in).show();
 };
 
 
 app.silentSignIn = function () {
-    if (localStorage.uid == null || localStorage.uid == 'null'){
+    if (localStorage.uid == null || localStorage.uid === 'null') {
         app.failedLogin();
     }
-    if (app.city != '' && localStorage.uid && localStorage.uid != null){
+    if (app.city !== '' && localStorage.uid && localStorage.uid != null) {
         var user = JSON.parse(localStorage.user);
         var data = {
             uid: localStorage.uid,
             created_at: new Date().getTime(),
             city: app.city
         };
+        app.spinner.removeAttribute('hidden');
         $.ajax({
             url: app.baseServerUrl + '/sign_in/id',
             method: 'POST',
@@ -118,14 +115,16 @@ app.silentSignIn = function () {
             },
             success: function (response) {
                 localStorage.uid = response.user.uid;
-                if (response.clothing){
+                if (response.clothing) {
                     app.setWarmLevel(response.clothing.warm_level);
                     localStorage.clothing = JSON.stringify(response.clothing);
                 }
                 app.loginSuccess(user);
+                app.spinner.setAttribute('hidden', true);
             },
             error: function (response) {
                 app.failedLogin();
+                app.spinner.setAttribute('hidden', true);
             }
         });
     }
